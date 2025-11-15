@@ -1,0 +1,185 @@
+# GraphQL Schema for AWS AppSync
+# This schema is designed to work with DynamoDB as the data source
+# and can be integrated with AWS Amplify
+
+# ------------------------------
+# Types
+# ------------------------------
+
+type Product @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  description: String!
+  categoryId: ID! @index(name: "productsByCategory")
+  category: Category @belongsTo(fields: ["categoryId"])
+  specs: [ProductSpec]
+  priceOriginal: Int! # Price in cents (e.g., 12999 = $129.99)
+  priceDiscount: Int! # Discounted price in cents
+  images: [ProductImage]
+  variants: [ProductVariant] @hasMany(indexName: "variantsByProduct", fields: ["id"])
+  featured: Boolean
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type ProductSpec {
+  key: String!
+  value: String!
+}
+
+type ProductImage {
+  url: String! # S3 URL: s3://bucket/products/{productId}/...
+  isThumbnail: Boolean
+  variantId: ID
+  alt: String
+}
+
+type ProductVariant @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  productId: ID! @index(name: "variantsByProduct")
+  product: Product @belongsTo(fields: ["productId"])
+  name: String! # e.g., "Red", "XL"
+  type: VariantType!
+  stockAvailable: Int
+  images: [ProductImage]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+enum VariantType {
+  COLOR
+  SIZE
+  MATERIAL
+  STYLE
+}
+
+type Category @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  description: String
+  imageUrl: String # S3 URL
+  parentCategoryId: ID
+  products: [Product] @hasMany(indexName: "productsByCategory", fields: ["id"])
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+# Cart and Order Management
+# Note: Cart should be user-specific when authentication is enabled
+
+type Cart @model @auth(rules: [{ allow: owner }, { allow: public, operations: [read] }]) {
+  id: ID!
+  userId: String @index(name: "cartByUser")
+  items: [CartItem] @hasMany(indexName: "itemsByCart", fields: ["id"])
+  status: CartStatus! # ACTIVE, CHECKED_OUT, ABANDONED
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+enum CartStatus {
+  ACTIVE
+  CHECKED_OUT
+  ABANDONED
+}
+
+type CartItem @model @auth(rules: [{ allow: owner }, { allow: public, operations: [read] }]) {
+  id: ID!
+  cartId: ID! @index(name: "itemsByCart")
+  cart: Cart @belongsTo(fields: ["cartId"])
+  productId: ID!
+  product: Product @hasOne(fields: ["productId"])
+  variantId: ID
+  variant: ProductVariant @hasOne(fields: ["variantId"])
+  quantity: Int!
+  priceAtAdd: Int! # Capture price at time of adding to cart
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+# Optional: User type for future authentication with Cognito
+type User @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  email: String! @index(name: "userByEmail")
+  name: String
+  phone: String
+  carts: [Cart] @hasMany(indexName: "cartByUser", fields: ["id"])
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+# ------------------------------
+# Input Types for Filters
+# ------------------------------
+
+input ProductFilterInput {
+  categoryId: ID
+  minPrice: Int
+  maxPrice: Int
+  featured: Boolean
+  searchQuery: String
+}
+
+# ------------------------------
+# Custom Queries (in addition to auto-generated ones)
+# ------------------------------
+
+type Query {
+  # Search products with filters
+  searchProducts(
+    filter: ProductFilterInput
+    limit: Int
+    nextToken: String
+  ): ProductConnection @function(name: "searchProducts-${env}")
+
+  # Get featured products
+  listFeaturedProducts(
+    limit: Int
+    nextToken: String
+  ): ProductConnection
+
+  # Get products by category
+  listProductsByCategory(
+    categoryId: ID!
+    limit: Int
+    nextToken: String
+  ): ProductConnection
+}
+
+type ProductConnection {
+  items: [Product]
+  nextToken: String
+}
+
+# ------------------------------
+# Custom Mutations
+# ------------------------------
+
+type Mutation {
+  # Add item to cart (will create cart if doesn't exist)
+  addToCart(
+    productId: ID!
+    variantId: ID
+    quantity: Int!
+  ): CartItem @function(name: "addToCart-${env}")
+
+  # Update cart item quantity
+  updateCartItemQuantity(
+    cartItemId: ID!
+    quantity: Int!
+  ): CartItem @function(name: "updateCartItemQuantity-${env}")
+
+  # Clear entire cart
+  clearCart(cartId: ID!): Cart @function(name: "clearCart-${env}")
+}
+
+# ------------------------------
+# Subscriptions (for real-time updates)
+# ------------------------------
+
+type Subscription {
+  onCartUpdated(userId: String!): Cart
+    @aws_subscribe(mutations: ["addToCart", "updateCartItemQuantity", "clearCart"])
+
+  onProductUpdated(id: ID!): Product
+    @aws_subscribe(mutations: ["updateProduct"])
+}
