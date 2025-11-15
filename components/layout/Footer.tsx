@@ -12,13 +12,13 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-800 text-white mt-auto">
+    <footer className="bg-neutral-900 text-white mt-auto">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
           <div>
-            <h3 className="text-lg font-bold mb-4">E-Commerce</h3>
-            <p className="text-gray-400 text-sm">
+            <h3 className="text-lg font-bold mb-4 text-accent-500">E-Commerce</h3>
+            <p className="text-neutral-400 text-sm">
               Tu tienda en línea de confianza para productos de calidad.
             </p>
           </div>
@@ -30,7 +30,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-neutral-400 hover:text-accent-500 transition-colors"
                 >
                   Inicio
                 </Link>
@@ -38,7 +38,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/search"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-neutral-400 hover:text-accent-500 transition-colors"
                 >
                   Buscar Productos
                 </Link>
@@ -46,7 +46,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/cart"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-neutral-400 hover:text-accent-500 transition-colors"
                 >
                   Carrito
                 </Link>
@@ -57,14 +57,14 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3 className="text-lg font-bold mb-4">Contacto</h3>
-            <p className="text-gray-400 text-sm">
+            <p className="text-neutral-400 text-sm">
               ¿Tienes preguntas? Contáctanos por WhatsApp.
             </p>
           </div>
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
+        <div className="border-t border-neutral-700 mt-8 pt-6 text-center text-neutral-400 text-sm">
           <p>&copy; {currentYear} E-Commerce. Todos los derechos reservados.</p>
           <p className="mt-2">
             Desarrollado con Next.js y preparado para AWS Amplify

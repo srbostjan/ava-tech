@@ -24,14 +24,18 @@
 import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { notFound } from 'next/navigation';
+import { ShoppingCart, Check } from 'lucide-react';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductSpecs from '@/components/product/ProductSpecs';
 import VariantSelector from '@/components/product/VariantSelector';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
+import { Button } from '@/components/ds/atomic/Button';
+import { Badge } from '@/components/ds/atomic/Badge';
+import { Price } from '@/components/ds/molecular/Price';
 import { getProductById } from '@/lib/mock/products';
 import { getCategoryName } from '@/lib/mock/categories';
 import { useCartStore } from '@/lib/store/cartStore';
-import { formatPrice, calculateDiscountPercentage, generateProductWhatsAppMessage } from '@/lib/utils/format';
+import { calculateDiscountPercentage, generateProductWhatsAppMessage } from '@/lib/utils/format';
 import { ProductVariant } from '@/lib/types';
 
 interface ProductPageProps {
@@ -86,24 +90,24 @@ export default function ProductPage({ params }: ProductPageProps) {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-neutral-50 py-8">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm">
-          <ol className="flex items-center space-x-2 text-gray-600">
+          <ol className="flex items-center space-x-2 text-neutral-700">
             <li>
-              <a href="/" className="hover:text-blue-600">
+              <a href="/" className="hover:text-accent-500 transition-colors">
                 Inicio
               </a>
             </li>
             <li>/</li>
             <li>
-              <a href={`/search?category=${product.categoryId}`} className="hover:text-blue-600">
+              <a href={`/search?category=${product.categoryId}`} className="hover:text-accent-500 transition-colors">
                 {categoryName}
               </a>
             </li>
             <li>/</li>
-            <li className="text-gray-800 font-medium">{product.name}</li>
+            <li className="text-neutral-900 font-medium">{product.name}</li>
           </ol>
         </nav>
 
@@ -114,18 +118,18 @@ export default function ProductPage({ params }: ProductPageProps) {
           </div>
 
           {/* Right Column: Product Info */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 lg:p-8">
             {/* Product Name */}
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            <h1 className="text-3xl font-bold text-neutral-900 mb-4">
               {product.name}
             </h1>
 
             {/* Category */}
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-neutral-700 mb-6">
               Categoría:{' '}
               <a
                 href={`/search?category=${product.categoryId}`}
-                className="text-blue-600 hover:underline"
+                className="text-accent-500 hover:text-accent-600 transition-colors font-medium"
               >
                 {categoryName}
               </a>
@@ -133,32 +137,22 @@ export default function ProductPage({ params }: ProductPageProps) {
 
             {/* Pricing */}
             <div className="mb-6">
-              {hasDiscount && (
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl text-gray-500 line-through">
-                    {formatPrice(product.priceOriginal)}
-                  </span>
-                  <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                    -{discountPercentage}% OFF
-                  </span>
-                </div>
-              )}
-              <p className="text-4xl font-bold text-green-600">
-                {formatPrice(product.priceDiscount)}
-              </p>
-              {hasDiscount && (
-                <p className="text-sm text-green-600 mt-1">
-                  Ahorras {formatPrice(product.priceOriginal - product.priceDiscount)}
-                </p>
-              )}
+              <Price
+                original={product.priceOriginal}
+                discount={product.priceDiscount}
+                size="lg"
+                layout="vertical"
+                showPercentageBadge={true}
+                showSavings={true}
+              />
             </div>
 
             {/* Description */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            <div className="mb-6 pb-6 border-b border-neutral-100">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-2">
                 Descripción
               </h3>
-              <p className="text-gray-600 leading-relaxed">{product.description}</p>
+              <p className="text-neutral-700 leading-relaxed">{product.description}</p>
             </div>
 
             {/* Variant Selector */}
@@ -173,14 +167,14 @@ export default function ProductPage({ params }: ProductPageProps) {
             )}
 
             {/* Quantity Selector */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="mb-6 pb-6 border-b border-neutral-100">
+              <label className="block text-sm font-medium text-neutral-900 mb-3">
                 Cantidad
               </label>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-10 rounded-lg font-bold"
+                  className="bg-neutral-100 hover:bg-neutral-200 text-neutral-900 w-10 h-10 rounded-md font-bold transition-colors"
                 >
                   -
                 </button>
@@ -189,11 +183,11 @@ export default function ProductPage({ params }: ProductPageProps) {
                   min="1"
                   value={quantity}
                   onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-20 text-center border-2 border-gray-300 rounded-lg py-2 font-semibold"
+                  className="w-20 text-center border-2 border-neutral-100 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/30 rounded-md py-2 font-semibold outline-none transition-colors"
                 />
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-10 rounded-lg font-bold"
+                  className="bg-neutral-100 hover:bg-neutral-200 text-neutral-900 w-10 h-10 rounded-md font-bold transition-colors"
                 >
                   +
                 </button>
@@ -202,23 +196,24 @@ export default function ProductPage({ params }: ProductPageProps) {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <button
+              <Button
                 onClick={handleAddToCart}
-                className={`w-full py-3 px-6 rounded-lg font-bold transition-all ${
-                  addedToCart
-                    ? 'bg-green-500 text-white'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
-                }`}
+                variant={addedToCart ? 'outline' : 'primary'}
+                size="lg"
+                className="w-full"
+                icon={addedToCart ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
               >
-                {addedToCart ? '✓ Agregado al carrito' : 'Agregar al carrito'}
-              </button>
+                {addedToCart ? 'Agregado al carrito' : 'Agregar al carrito'}
+              </Button>
 
-              <button
+              <Button
                 onClick={handleBuyNow}
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-bold transition-colors"
+                variant="secondary"
+                size="lg"
+                className="w-full"
               >
                 Comprar ahora
-              </button>
+              </Button>
 
               <WhatsAppButton
                 message={whatsappMessage}

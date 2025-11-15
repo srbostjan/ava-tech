@@ -1,26 +1,18 @@
 /**
- * Search Page
+ * Search Page - Refactored with Design System
  *
  * Allows users to search and filter products
- *
- * Future: Will use GraphQL queries with filters
- * Example:
- *   query SearchProducts($query: String, $filter: ProductFilterInput) {
- *     searchProducts(query: $query, filter: $filter) {
- *       items { ...ProductFields }
- *       nextToken
- *     }
- *   }
  */
 
 'use client';
 
 import { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import ProductCard from '@/components/product/ProductCard';
+import { ProductCard } from '@/components/ds/molecular/ProductCard';
+import { Button } from '@/components/ds/atomic/Button';
 import { filterProducts } from '@/lib/mock/products';
 import { mockCategories } from '@/lib/mock/categories';
-import { Product } from '@/lib/types';
+import { Search, X } from 'lucide-react';
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -38,17 +30,15 @@ function SearchContent() {
     const timer = setTimeout(() => {
       setDebouncedQuery(searchQuery);
     }, 300);
-
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Filter products based on criteria
-  // Future: Replace with GraphQL query to AppSync
+  // Filter products
   const filteredProducts = useMemo(() => {
     return filterProducts({
       searchQuery: debouncedQuery,
       categoryId: selectedCategory || undefined,
-      minPrice: minPrice ? minPrice * 100 : undefined, // Convert to cents
+      minPrice: minPrice ? minPrice * 100 : undefined,
       maxPrice: maxPrice ? maxPrice * 100 : undefined,
     });
   }, [debouncedQuery, selectedCategory, minPrice, maxPrice]);
@@ -63,9 +53,9 @@ function SearchContent() {
   const hasActiveFilters = debouncedQuery || selectedCategory || minPrice || maxPrice;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+    <div className="min-h-screen bg-neutral-50 py-8">
+      <div className="container mx-auto px-4 md:px-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-8">
           Buscar Productos
         </h1>
 
@@ -74,27 +64,30 @@ function SearchContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-neutral-900 mb-2">
                 Buscar
               </label>
-              <input
-                type="text"
-                placeholder="Nombre del producto..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Nombre del producto..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 pl-10 border border-neutral-100 rounded-md focus:ring-2 focus:ring-accent-500 focus:border-accent-500 focus:outline-none transition-colors"
+                />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+              </div>
             </div>
 
             {/* Category Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-neutral-900 mb-2">
                 Categoría
               </label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-neutral-100 rounded-md focus:ring-2 focus:ring-accent-500 focus:border-accent-500 focus:outline-none transition-colors bg-white"
               >
                 <option value="">Todas las categorías</option>
                 {mockCategories.map((cat) => (
@@ -107,7 +100,7 @@ function SearchContent() {
 
             {/* Min Price */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-neutral-900 mb-2">
                 Precio mínimo ($)
               </label>
               <input
@@ -118,13 +111,13 @@ function SearchContent() {
                 onChange={(e) =>
                   setMinPrice(e.target.value ? parseFloat(e.target.value) : undefined)
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-neutral-100 rounded-md focus:ring-2 focus:ring-accent-500 focus:border-accent-500 focus:outline-none transition-colors"
               />
             </div>
 
             {/* Max Price */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-neutral-900 mb-2">
                 Precio máximo ($)
               </label>
               <input
@@ -135,7 +128,7 @@ function SearchContent() {
                 onChange={(e) =>
                   setMaxPrice(e.target.value ? parseFloat(e.target.value) : undefined)
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-neutral-100 rounded-md focus:ring-2 focus:ring-accent-500 focus:border-accent-500 focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -143,19 +136,21 @@ function SearchContent() {
           {/* Clear Filters Button */}
           {hasActiveFilters && (
             <div className="mt-4">
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleClearFilters}
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                icon={<X className="h-4 w-4" />}
               >
                 Limpiar filtros
-              </button>
+              </Button>
             </div>
           )}
         </div>
 
         {/* Results Count */}
         <div className="mb-6">
-          <p className="text-gray-600">
+          <p className="text-neutral-700 text-sm">
             {filteredProducts.length}{' '}
             {filteredProducts.length === 1 ? 'producto encontrado' : 'productos encontrados'}
           </p>
@@ -170,31 +165,20 @@ function SearchContent() {
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <svg
-              className="mx-auto h-24 w-24 text-gray-400 mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              No se encontraron productos
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Intenta ajustar tus filtros o búsqueda
-            </p>
-            <button
-              onClick={handleClearFilters}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
-            >
-              Ver todos los productos
-            </button>
+            <div className="max-w-md mx-auto">
+              <div className="w-20 h-20 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="h-10 w-10 text-neutral-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-neutral-900 mb-2">
+                No se encontraron productos
+              </h3>
+              <p className="text-neutral-700 mb-6">
+                Intenta ajustar tus filtros o búsqueda
+              </p>
+              <Button variant="primary" onClick={handleClearFilters}>
+                Ver todos los productos
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -204,7 +188,13 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center"><div className="text-gray-600">Cargando...</div></div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-neutral-50 py-8 flex items-center justify-center">
+          <div className="text-neutral-700">Cargando...</div>
+        </div>
+      }
+    >
       <SearchContent />
     </Suspense>
   );
