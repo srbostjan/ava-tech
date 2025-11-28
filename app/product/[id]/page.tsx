@@ -21,22 +21,22 @@
 
 'use client';
 
-import { useState, use } from 'react';
-import { useRouter } from 'next/navigation';
-import { notFound } from 'next/navigation';
 import { ShoppingCart, Check } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter, notFound } from 'next/navigation';
+import { useState, use } from 'react';
+
+import { Button } from '@/components/ds/atomic/Button';
+import { Price } from '@/components/ds/molecular/Price';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductSpecs from '@/components/product/ProductSpecs';
 import VariantSelector from '@/components/product/VariantSelector';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
-import { Button } from '@/components/ds/atomic/Button';
-import { Badge } from '@/components/ds/atomic/Badge';
-import { Price } from '@/components/ds/molecular/Price';
-import { getProductById } from '@/lib/mock/products';
 import { getCategoryName } from '@/lib/mock/categories';
+import { getProductById } from '@/lib/mock/products';
 import { useCartStore } from '@/lib/store/cartStore';
-import { calculateDiscountPercentage, generateProductWhatsAppMessage } from '@/lib/utils/format';
 import { ProductVariant } from '@/lib/types';
+import { generateProductWhatsAppMessage } from '@/lib/utils/format';
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -50,7 +50,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   const product = getProductById(resolvedParams.id);
 
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(
-    product?.variants[0]
+    product?.variants[0],
   );
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -62,16 +62,12 @@ export default function ProductPage({ params }: ProductPageProps) {
   }
 
   const categoryName = getCategoryName(product.categoryId);
-  const discountPercentage = calculateDiscountPercentage(
-    product.priceOriginal,
-    product.priceDiscount
-  );
-  const hasDiscount = discountPercentage > 0;
 
   // Filter images for selected variant or show all
-  const displayImages = selectedVariant?.images && selectedVariant.images.length > 0
-    ? selectedVariant.images
-    : product.images;
+  const displayImages =
+    selectedVariant?.images && selectedVariant.images.length > 0
+      ? selectedVariant.images
+      : product.images;
 
   const handleAddToCart = () => {
     addItem(product, selectedVariant, quantity);
@@ -84,10 +80,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     router.push('/cart');
   };
 
-  const whatsappMessage = generateProductWhatsAppMessage(
-    product.name,
-    selectedVariant?.name
-  );
+  const whatsappMessage = generateProductWhatsAppMessage(product.name, selectedVariant?.name);
 
   return (
     <div className="min-h-screen bg-neutral-50 py-8">
@@ -96,13 +89,16 @@ export default function ProductPage({ params }: ProductPageProps) {
         <nav className="mb-6 text-sm">
           <ol className="flex items-center space-x-2 text-neutral-700">
             <li>
-              <a href="/" className="hover:text-accent-500 transition-colors">
+              <Link href="/" className="hover:text-accent-500 transition-colors">
                 Inicio
-              </a>
+              </Link>
             </li>
             <li>/</li>
             <li>
-              <a href={`/search?category=${product.categoryId}`} className="hover:text-accent-500 transition-colors">
+              <a
+                href={`/search?category=${product.categoryId}`}
+                className="hover:text-accent-500 transition-colors"
+              >
                 {categoryName}
               </a>
             </li>
@@ -120,9 +116,7 @@ export default function ProductPage({ params }: ProductPageProps) {
           {/* Right Column: Product Info */}
           <div className="bg-white rounded-lg shadow-md p-6 lg:p-8">
             {/* Product Name */}
-            <h1 className="text-3xl font-bold text-neutral-900 mb-4">
-              {product.name}
-            </h1>
+            <h1 className="text-3xl font-bold text-neutral-900 mb-4">{product.name}</h1>
 
             {/* Category */}
             <p className="text-sm text-neutral-700 mb-6">
@@ -149,9 +143,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
             {/* Description */}
             <div className="mb-6 pb-6 border-b border-neutral-100">
-              <h3 className="text-lg font-semibold text-neutral-900 mb-2">
-                Descripción
-              </h3>
+              <h3 className="text-lg font-semibold text-neutral-900 mb-2">Descripción</h3>
               <p className="text-neutral-700 leading-relaxed">{product.description}</p>
             </div>
 
@@ -168,9 +160,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
             {/* Quantity Selector */}
             <div className="mb-6 pb-6 border-b border-neutral-100">
-              <label className="block text-sm font-medium text-neutral-900 mb-3">
-                Cantidad
-              </label>
+              <label className="block text-sm font-medium text-neutral-900 mb-3">Cantidad</label>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -182,7 +172,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                   type="number"
                   min="1"
                   value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) ?? 1))}
                   className="w-20 text-center border-2 border-neutral-100 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/30 rounded-md py-2 font-semibold outline-none transition-colors"
                 />
                 <button
@@ -201,25 +191,18 @@ export default function ProductPage({ params }: ProductPageProps) {
                 variant={addedToCart ? 'outline' : 'primary'}
                 size="lg"
                 className="w-full"
-                icon={addedToCart ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
+                icon={
+                  addedToCart ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />
+                }
               >
                 {addedToCart ? 'Agregado al carrito' : 'Agregar al carrito'}
               </Button>
 
-              <Button
-                onClick={handleBuyNow}
-                variant="secondary"
-                size="lg"
-                className="w-full"
-              >
+              <Button onClick={handleBuyNow} variant="secondary" size="lg" className="w-full">
                 Comprar ahora
               </Button>
 
-              <WhatsAppButton
-                message={whatsappMessage}
-                fixed={false}
-                className="w-full"
-              />
+              <WhatsAppButton message={whatsappMessage} fixed={false} className="w-full" />
             </div>
           </div>
         </div>

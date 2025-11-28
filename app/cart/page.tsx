@@ -15,18 +15,27 @@
 
 'use client';
 
+import { ShoppingCart, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Trash2 } from 'lucide-react';
-import { useCartStore } from '@/lib/store/cartStore';
-import { formatPrice, generateCartWhatsAppMessage, formatWhatsAppUrl } from '@/lib/utils/format';
-import { WHATSAPP_NUMBER } from '@/lib/utils/constants';
-import { Button } from '@/components/ds/atomic/Button';
+
 import { Badge } from '@/components/ds/atomic/Badge';
+import { Button } from '@/components/ds/atomic/Button';
+import { useCartStore } from '@/lib/store/cartStore';
+import { WHATSAPP_NUMBER } from '@/lib/utils/constants';
+import { formatPrice, generateCartWhatsAppMessage, formatWhatsAppUrl } from '@/lib/utils/format';
 
 export default function CartPage() {
-  const { items, totalItems, subtotal, totalDiscount, total, updateQuantity, removeItem, clearCart } =
-    useCartStore();
+  const {
+    items,
+    totalItems,
+    subtotal,
+    totalDiscount,
+    total,
+    updateQuantity,
+    removeItem,
+    clearCart,
+  } = useCartStore();
 
   const handleCheckout = () => {
     const cartMessage = generateCartWhatsAppMessage(
@@ -35,7 +44,7 @@ export default function CartPage() {
         quantity: item.quantity,
         variant: item.variant?.name,
         price: item.priceAtAdd,
-      }))
+      })),
     );
 
     const whatsappUrl = formatWhatsAppUrl(WHATSAPP_NUMBER, cartMessage);
@@ -48,12 +57,8 @@ export default function CartPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-12 text-center">
             <ShoppingCart className="mx-auto h-24 w-24 text-neutral-400 mb-6" />
-            <h2 className="text-2xl font-bold text-neutral-900 mb-4">
-              Tu carrito está vacío
-            </h2>
-            <p className="text-neutral-700 mb-8">
-              ¡Agrega algunos productos para comenzar!
-            </p>
+            <h2 className="text-2xl font-bold text-neutral-900 mb-4">Tu carrito está vacío</h2>
+            <p className="text-neutral-700 mb-8">¡Agrega algunos productos para comenzar!</p>
             <Link href="/search">
               <Button variant="primary" size="lg">
                 Explorar Productos
@@ -68,24 +73,21 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-neutral-50 py-8">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-neutral-900 mb-8">
-          Carrito de Compras
-        </h1>
+        <h1 className="text-3xl font-bold text-neutral-900 mb-8">Carrito de Compras</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => {
               const thumbnail =
-                item.product.images.find((img) => img.isThumbnail) ||
-                item.product.images[0];
+                item.product.images.find((img) => img.isThumbnail) ?? item.product.images[0];
               const itemSubtotal = item.priceAtAdd * item.quantity;
               const originalSubtotal = item.product.priceOriginal * item.quantity;
               const itemDiscount = originalSubtotal - itemSubtotal;
 
               return (
                 <div
-                  key={`${item.productId}-${item.variantId || 'default'}`}
+                  key={`${item.productId}-${item.variantId ?? 'default'}`}
                   className="bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-lg transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row gap-4">
@@ -116,7 +118,10 @@ export default function CartPage() {
 
                       {item.variant && (
                         <p className="text-sm text-neutral-700 mb-3">
-                          Variante: <Badge variant="outline" size="sm">{item.variant.name}</Badge>
+                          Variante:{' '}
+                          <Badge variant="outline" size="sm">
+                            {item.variant.name}
+                          </Badge>
                         </p>
                       )}
 
@@ -126,11 +131,7 @@ export default function CartPage() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() =>
-                              updateQuantity(
-                                item.productId,
-                                item.quantity - 1,
-                                item.variantId
-                              )
+                              updateQuantity(item.productId, item.quantity - 1, item.variantId)
                             }
                             className="bg-neutral-100 hover:bg-neutral-200 text-neutral-900 w-8 h-8 rounded-md font-bold transition-colors"
                           >
@@ -141,11 +142,7 @@ export default function CartPage() {
                           </span>
                           <button
                             onClick={() =>
-                              updateQuantity(
-                                item.productId,
-                                item.quantity + 1,
-                                item.variantId
-                              )
+                              updateQuantity(item.productId, item.quantity + 1, item.variantId)
                             }
                             className="bg-neutral-100 hover:bg-neutral-200 text-neutral-900 w-8 h-8 rounded-md font-bold transition-colors"
                           >
@@ -199,9 +196,7 @@ export default function CartPage() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-neutral-900 mb-6">
-                Resumen del Pedido
-              </h2>
+              <h2 className="text-xl font-bold text-neutral-900 mb-6">Resumen del Pedido</h2>
 
               <div className="space-y-3 mb-4 pb-4 border-b border-neutral-100">
                 <div className="flex justify-between text-neutral-700">

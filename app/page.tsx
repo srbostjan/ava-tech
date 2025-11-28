@@ -12,13 +12,14 @@
  *   }
  */
 
-import { ProductCard } from '@/components/ds/molecular/ProductCard';
-import { CategoryCard } from '@/components/ds/molecular/CategoryCard';
-import { Button } from '@/components/ds/atomic/Button';
-import { getFeaturedProducts } from '@/lib/mock/products';
-import { mockCategories } from '@/lib/mock/categories';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
+
+import { Button } from '@/components/ds/atomic/Button';
+import { CategoryCard } from '@/components/ds/molecular/CategoryCard';
+import { ProductCard } from '@/components/ds/molecular/ProductCard';
+import { mockCategories } from '@/lib/mock/categories';
+import { getFeaturedProducts } from '@/lib/mock/products';
 
 export default function HomePage() {
   // Currently using mock data
@@ -37,11 +38,7 @@ export default function HomePage() {
             Calidad excepcional con descuentos increíbles
           </p>
           <Link href="/search">
-            <Button
-              variant="secondary"
-              size="lg"
-              icon={<Search className="h-5 w-5" />}
-            >
+            <Button variant="secondary" size="lg" icon={<Search className="h-5 w-5" />}>
               Explorar Productos
             </Button>
           </Link>

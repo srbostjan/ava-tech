@@ -16,6 +16,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import { Product, ProductVariant, CartItem, Cart } from '@/lib/types';
 
 interface CartStore extends Cart {
@@ -31,13 +32,13 @@ interface CartStore extends Cart {
 
 const calculateTotals = (items: CartItem[]) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = items.reduce((sum, item) => sum + (item.priceAtAdd * item.quantity), 0);
+  const subtotal = items.reduce((sum, item) => sum + item.priceAtAdd * item.quantity, 0);
 
   // Calculate total discount based on original prices
   const totalDiscount = items.reduce((sum, item) => {
     const originalPrice = item.product.priceOriginal;
     const discountPerItem = originalPrice - item.priceAtAdd;
-    return sum + (discountPerItem * item.quantity);
+    return sum + discountPerItem * item.quantity;
   }, 0);
 
   const total = subtotal;
@@ -52,7 +53,7 @@ const calculateTotals = (items: CartItem[]) => {
 
 export const useCartStore = create<CartStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       items: [],
       totalItems: 0,
       subtotal: 0,
@@ -62,9 +63,7 @@ export const useCartStore = create<CartStore>()(
       addItem: (product: Product, variant?: ProductVariant, quantity: number = 1) => {
         set((state) => {
           const existingItemIndex = state.items.findIndex(
-            (item) =>
-              item.productId === product.id &&
-              item.variantId === variant?.id
+            (item) => item.productId === product.id && item.variantId === variant?.id,
           );
 
           let newItems: CartItem[];
@@ -98,8 +97,7 @@ export const useCartStore = create<CartStore>()(
       removeItem: (productId: string, variantId?: string) => {
         set((state) => {
           const newItems = state.items.filter(
-            (item) =>
-              !(item.productId === productId && item.variantId === variantId)
+            (item) => !(item.productId === productId && item.variantId === variantId),
           );
 
           const totals = calculateTotals(newItems);
@@ -150,6 +148,6 @@ export const useCartStore = create<CartStore>()(
       name: 'cart-storage', // localStorage key
       // Future: Replace localStorage with AWS AppSync + DynamoDB
       // When user is authenticated, sync cart to cloud
-    }
-  )
+    },
+  ),
 );

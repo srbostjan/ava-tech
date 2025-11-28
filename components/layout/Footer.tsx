@@ -28,10 +28,7 @@ export default function Footer() {
             <h3 className="text-lg font-bold mb-4">Enlaces Rápidos</h3>
             <ul className="space-y-2">
               <li>
-                <Link
-                  href="/"
-                  className="text-neutral-400 hover:text-accent-500 transition-colors"
-                >
+                <Link href="/" className="text-neutral-400 hover:text-accent-500 transition-colors">
                   Inicio
                 </Link>
               </li>
@@ -57,18 +54,14 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3 className="text-lg font-bold mb-4">Contacto</h3>
-            <p className="text-neutral-400 text-sm">
-              ¿Tienes preguntas? Contáctanos por WhatsApp.
-            </p>
+            <p className="text-neutral-400 text-sm">¿Tienes preguntas? Contáctanos por WhatsApp.</p>
           </div>
         </div>
 
         {/* Copyright */}
         <div className="border-t border-neutral-700 mt-8 pt-6 text-center text-neutral-400 text-sm">
           <p>&copy; {currentYear} E-Commerce. Todos los derechos reservados.</p>
-          <p className="mt-2">
-            Desarrollado con Next.js y preparado para AWS Amplify
-          </p>
+          <p className="mt-2">Desarrollado con Next.js y preparado para AWS Amplify</p>
         </div>
       </div>
     </footer>

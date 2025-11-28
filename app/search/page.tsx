@@ -6,18 +6,19 @@
 
 'use client';
 
-import { useState, useEffect, useMemo, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { ProductCard } from '@/components/ds/molecular/ProductCard';
-import { Button } from '@/components/ds/atomic/Button';
-import { filterProducts } from '@/lib/mock/products';
-import { mockCategories } from '@/lib/mock/categories';
 import { Search, X } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { useState, useEffect, useMemo, Suspense } from 'react';
+
+import { Button } from '@/components/ds/atomic/Button';
+import { ProductCard } from '@/components/ds/molecular/ProductCard';
+import { mockCategories } from '@/lib/mock/categories';
+import { filterProducts } from '@/lib/mock/products';
 
 function SearchContent() {
   const searchParams = useSearchParams();
-  const initialQuery = searchParams.get('q') || '';
-  const initialCategory = searchParams.get('category') || '';
+  const initialQuery = searchParams.get('q') ?? '';
+  const initialCategory = searchParams.get('category') ?? '';
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
@@ -37,7 +38,7 @@ function SearchContent() {
   const filteredProducts = useMemo(() => {
     return filterProducts({
       searchQuery: debouncedQuery,
-      categoryId: selectedCategory || undefined,
+      categoryId: selectedCategory ?? undefined,
       minPrice: minPrice ? minPrice * 100 : undefined,
       maxPrice: maxPrice ? maxPrice * 100 : undefined,
     });
@@ -50,23 +51,19 @@ function SearchContent() {
     setMaxPrice(undefined);
   };
 
-  const hasActiveFilters = debouncedQuery || selectedCategory || minPrice || maxPrice;
+  const hasActiveFilters = debouncedQuery ?? selectedCategory ?? minPrice ?? maxPrice;
 
   return (
     <div className="min-h-screen bg-neutral-50 py-8">
       <div className="container mx-auto px-4 md:px-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-8">
-          Buscar Productos
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-8">Buscar Productos</h1>
 
         {/* Filters Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search Input */}
             <div>
-              <label className="block text-sm font-medium text-neutral-900 mb-2">
-                Buscar
-              </label>
+              <label className="block text-sm font-medium text-neutral-900 mb-2">Buscar</label>
               <div className="relative">
                 <input
                   type="text"
@@ -81,9 +78,7 @@ function SearchContent() {
 
             {/* Category Filter */}
             <div>
-              <label className="block text-sm font-medium text-neutral-900 mb-2">
-                Categoría
-              </label>
+              <label className="block text-sm font-medium text-neutral-900 mb-2">Categoría</label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -107,7 +102,7 @@ function SearchContent() {
                 type="number"
                 placeholder="0"
                 min="0"
-                value={minPrice || ''}
+                value={minPrice ?? ''}
                 onChange={(e) =>
                   setMinPrice(e.target.value ? parseFloat(e.target.value) : undefined)
                 }
@@ -124,7 +119,7 @@ function SearchContent() {
                 type="number"
                 placeholder="999999"
                 min="0"
-                value={maxPrice || ''}
+                value={maxPrice ?? ''}
                 onChange={(e) =>
                   setMaxPrice(e.target.value ? parseFloat(e.target.value) : undefined)
                 }
@@ -172,9 +167,7 @@ function SearchContent() {
               <h3 className="text-xl font-semibold text-neutral-900 mb-2">
                 No se encontraron productos
               </h3>
-              <p className="text-neutral-700 mb-6">
-                Intenta ajustar tus filtros o búsqueda
-              </p>
+              <p className="text-neutral-700 mb-6">Intenta ajustar tus filtros o búsqueda</p>
               <Button variant="primary" onClick={handleClearFilters}>
                 Ver todos los productos
               </Button>

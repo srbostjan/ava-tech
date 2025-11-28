@@ -10,6 +10,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 import { ButtonHTMLAttributes, forwardRef } from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 const buttonVariants = cva(
@@ -19,7 +20,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary: 'bg-accent-500 text-white hover:bg-accent-600 shadow-sm hover:shadow-md',
-        secondary: 'border-2 border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white',
+        secondary:
+          'border-2 border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white',
         ghost: 'text-accent-500 hover:bg-accent-50',
         danger: 'bg-error-500 text-white hover:bg-error-600 shadow-sm hover:shadow-md',
         outline: 'border-2 border-accent-500 text-accent-500 hover:bg-accent-500 hover:text-white',
@@ -37,12 +39,11 @@ const buttonVariants = cva(
       variant: 'primary',
       size: 'md',
     },
-  }
+  },
 );
 
 export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   loading?: boolean;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
@@ -62,13 +63,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <button
         className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
-        disabled={disabled || loading}
+        disabled={disabled ?? loading}
         {...props}
       >
         {loading && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -77,7 +78,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {!loading && icon && iconPosition === 'right' && icon}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = 'Button';

@@ -19,18 +19,21 @@ export default function VariantSelector({
   selectedVariantId,
   onVariantChange,
 }: VariantSelectorProps) {
-  if (!variants || variants.length === 0) {
+  if (!variants ?? variants.length === 0) {
     return null;
   }
 
   // Group variants by type
-  const variantsByType = variants.reduce((acc, variant) => {
-    if (!acc[variant.type]) {
-      acc[variant.type] = [];
-    }
-    acc[variant.type].push(variant);
-    return acc;
-  }, {} as Record<string, ProductVariant[]>);
+  const variantsByType = variants.reduce(
+    (acc, variant) => {
+      if (!acc[variant.type]) {
+        acc[variant.type] = [];
+      }
+      acc[variant.type].push(variant);
+      return acc;
+    },
+    {} as Record<string, ProductVariant[]>,
+  );
 
   const getTypeLabel = (type: string): string => {
     const labels: Record<string, string> = {
@@ -39,7 +42,7 @@ export default function VariantSelector({
       material: 'Material',
       style: 'Estilo',
     };
-    return labels[type] || type;
+    return labels[type] ?? type;
   };
 
   return (

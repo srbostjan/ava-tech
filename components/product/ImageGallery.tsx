@@ -9,8 +9,9 @@
 
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
+import { useState } from 'react';
+
 import { ProductImage } from '@/lib/types';
 
 interface ImageGalleryProps {
@@ -21,7 +22,7 @@ interface ImageGalleryProps {
 export default function ImageGallery({ images, productName }: ImageGalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  if (!images || images.length === 0) {
+  if (!images) {
     return (
       <div className="w-full h-96 bg-gray-200 flex items-center justify-center rounded-lg">
         <p className="text-gray-500">No hay imágenes disponibles</p>
@@ -37,7 +38,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
       <div className="relative w-full h-96 md:h-[500px] bg-gray-100 rounded-lg overflow-hidden">
         <Image
           src={selectedImage.url}
-          alt={selectedImage.alt || `${productName} - Imagen ${selectedImageIndex + 1}`}
+          alt={selectedImage.alt ?? `${productName} - Imagen ${selectedImageIndex + 1}`}
           fill
           className="object-contain"
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -50,7 +51,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
         <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
           {images.map((image, index) => (
             <button
-              key={index}
+              key={image.url}
               onClick={() => setSelectedImageIndex(index)}
               className={`relative h-20 md:h-24 rounded-lg overflow-hidden border-2 transition-all ${
                 index === selectedImageIndex
@@ -60,7 +61,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
             >
               <Image
                 src={image.url}
-                alt={image.alt || `${productName} thumbnail ${index + 1}`}
+                alt={image.alt ?? `${productName} thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
                 sizes="100px"

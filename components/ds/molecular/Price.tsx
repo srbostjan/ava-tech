@@ -7,8 +7,10 @@
 'use client';
 
 import { HTMLAttributes } from 'react';
+
 import { cn } from '@/lib/utils/cn';
 import { formatPrice, calculateDiscountPercentage } from '@/lib/utils/format';
+
 import { Badge } from '../atomic/Badge';
 
 export interface PriceProps extends HTMLAttributes<HTMLDivElement> {
@@ -63,7 +65,7 @@ export function Price({
       className={cn(
         'flex gap-2',
         layout === 'vertical' ? 'flex-col' : 'flex-row items-baseline',
-        className
+        className,
       )}
       {...props}
     >

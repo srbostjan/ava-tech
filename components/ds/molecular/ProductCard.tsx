@@ -6,14 +6,17 @@
 
 'use client';
 
-import Link from 'next/link';
+import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+
 import { Product } from '@/lib/types';
-import { Price } from './Price';
+import { cn } from '@/lib/utils/cn';
+
 import { Badge } from '../atomic/Badge';
 import { Button } from '../atomic/Button';
-import { ShoppingCart } from 'lucide-react';
-import { cn } from '@/lib/utils/cn';
+
+import { Price } from './Price';
 
 export interface ProductCardProps {
   product: Product;
@@ -22,7 +25,7 @@ export interface ProductCardProps {
 }
 
 export function ProductCard({ product, onAddToCart, className }: ProductCardProps) {
-  const thumbnail = product.images.find((img) => img.isThumbnail) || product.images[0];
+  const thumbnail = product.images.find((img) => img.isThumbnail) ?? product.images[0];
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -35,7 +38,7 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
       <div
         className={cn(
           'group bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full',
-          className
+          className,
         )}
       >
         {/* Image Container */}
@@ -43,7 +46,7 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
           {thumbnail && (
             <Image
               src={thumbnail.url}
-              alt={thumbnail.alt || product.name}
+              alt={thumbnail.alt ?? product.name}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -63,7 +66,11 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
           {product.priceOriginal > product.priceDiscount && (
             <div className="absolute top-3 right-3">
               <Badge variant="error" size="md">
-                -{Math.round(((product.priceOriginal - product.priceDiscount) / product.priceOriginal) * 100)}%
+                -
+                {Math.round(
+                  ((product.priceOriginal - product.priceDiscount) / product.priceOriginal) * 100,
+                )}
+                %
               </Badge>
             </div>
           )}
@@ -77,9 +84,7 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-neutral-700 mb-4 line-clamp-2 flex-1">
-            {product.description}
-          </p>
+          <p className="text-sm text-neutral-700 mb-4 line-clamp-2 flex-1">{product.description}</p>
 
           {/* Price */}
           <div className="mb-4">
@@ -106,11 +111,7 @@ export function ProductCard({ product, onAddToCart, className }: ProductCardProp
           )}
 
           {!onAddToCart && (
-            <Button
-              variant="outline"
-              size="md"
-              fullWidth
-            >
+            <Button variant="outline" size="md" fullWidth>
               Ver Detalles
             </Button>
           )}

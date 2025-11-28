@@ -16,7 +16,8 @@ export const mockProducts: Product[] = [
   {
     id: 'prod-001',
     name: 'Laptop HP Pavilion 15"',
-    description: 'Laptop de alto rendimiento con procesador Intel Core i7, 16GB RAM y 512GB SSD. Ideal para trabajo profesional, edición de video y gaming ligero. Pantalla Full HD de 15.6 pulgadas con tecnología IPS para colores vibrantes y amplios ángulos de visión.',
+    description:
+      'Laptop de alto rendimiento con procesador Intel Core i7, 16GB RAM y 512GB SSD. Ideal para trabajo profesional, edición de video y gaming ligero. Pantalla Full HD de 15.6 pulgadas con tecnología IPS para colores vibrantes y amplios ángulos de visión.',
     categoryId: 'cat-001',
     priceOriginal: 129999,
     priceDiscount: 97499,
@@ -64,7 +65,8 @@ export const mockProducts: Product[] = [
   {
     id: 'prod-002',
     name: 'Smartphone Samsung Galaxy S23',
-    description: 'El smartphone más avanzado de Samsung con cámara de 50MP, pantalla Dynamic AMOLED 2X y procesador Snapdragon 8 Gen 2. Experimenta velocidades 5G ultrarrápidas y un diseño elegante que se adapta a tu estilo de vida.',
+    description:
+      'El smartphone más avanzado de Samsung con cámara de 50MP, pantalla Dynamic AMOLED 2X y procesador Snapdragon 8 Gen 2. Experimenta velocidades 5G ultrarrápidas y un diseño elegante que se adapta a tu estilo de vida.',
     categoryId: 'cat-001',
     priceOriginal: 99999,
     priceDiscount: 84999,
@@ -128,7 +130,8 @@ export const mockProducts: Product[] = [
   {
     id: 'prod-003',
     name: 'Auriculares Sony WH-1000XM5',
-    description: 'Auriculares inalámbricos con la mejor cancelación de ruido del mercado. Disfruta de un sonido premium con 30 horas de batería y comodidad excepcional para todo el día.',
+    description:
+      'Auriculares inalámbricos con la mejor cancelación de ruido del mercado. Disfruta de un sonido premium con 30 horas de batería y comodidad excepcional para todo el día.',
     categoryId: 'cat-001',
     priceOriginal: 39999,
     priceDiscount: 31999,
@@ -171,7 +174,8 @@ export const mockProducts: Product[] = [
   {
     id: 'prod-004',
     name: 'Camiseta Polo Clásica',
-    description: 'Camiseta polo de algodón 100% premium, perfecta para cualquier ocasión. Diseño clásico y atemporal con ajuste regular y acabados de calidad.',
+    description:
+      'Camiseta polo de algodón 100% premium, perfecta para cualquier ocasión. Diseño clásico y atemporal con ajuste regular y acabados de calidad.',
     categoryId: 'cat-002',
     priceOriginal: 4999,
     priceDiscount: 3499,
@@ -225,7 +229,8 @@ export const mockProducts: Product[] = [
   {
     id: 'prod-005',
     name: 'Zapatillas Running Nike Air Zoom',
-    description: 'Zapatillas de running de alto rendimiento con tecnología Air Zoom para mayor amortiguación. Diseño ligero y transpirable para carreras de larga distancia.',
+    description:
+      'Zapatillas de running de alto rendimiento con tecnología Air Zoom para mayor amortiguación. Diseño ligero y transpirable para carreras de larga distancia.',
     categoryId: 'cat-004',
     priceOriginal: 12999,
     priceDiscount: 9749,
@@ -278,7 +283,8 @@ export const mockProducts: Product[] = [
   {
     id: 'prod-006',
     name: 'Cafetera Espresso Delonghi',
-    description: 'Cafetera espresso profesional para preparar el café perfecto en casa. Sistema de bomba de 15 bares y vaporizador para capuccinos cremosos.',
+    description:
+      'Cafetera espresso profesional para preparar el café perfecto en casa. Sistema de bomba de 15 bares y vaporizador para capuccinos cremosos.',
     categoryId: 'cat-003',
     priceOriginal: 29999,
     priceDiscount: 23999,
@@ -315,7 +321,8 @@ export const mockProducts: Product[] = [
   {
     id: 'prod-007',
     name: 'Libro: El Arte de la Guerra',
-    description: 'Edición de lujo del clásico tratado de estrategia militar de Sun Tzu. Incluye comentarios y análisis modernos sobre su aplicación en negocios y vida personal.',
+    description:
+      'Edición de lujo del clásico tratado de estrategia militar de Sun Tzu. Incluye comentarios y análisis modernos sobre su aplicación en negocios y vida personal.',
     categoryId: 'cat-005',
     priceOriginal: 2499,
     priceDiscount: 1999,
@@ -353,7 +360,8 @@ export const mockProducts: Product[] = [
   {
     id: 'prod-008',
     name: 'Smartwatch Apple Watch Series 9',
-    description: 'El smartwatch más avanzado de Apple con pantalla Always-On Retina, sensores de salud avanzados y resistencia al agua. Monitorea tu salud, fitness y mantente conectado.',
+    description:
+      'El smartwatch más avanzado de Apple con pantalla Always-On Retina, sensores de salud avanzados y resistencia al agua. Monitorea tu salud, fitness y mantente conectado.',
     categoryId: 'cat-001',
     priceOriginal: 44999,
     priceDiscount: 39999,
@@ -432,8 +440,7 @@ export const searchProducts = (query: string): Product[] => {
   const lowerQuery = query.toLowerCase();
   return mockProducts.filter(
     (p) =>
-      p.name.toLowerCase().includes(lowerQuery) ||
-      p.description.toLowerCase().includes(lowerQuery)
+      p.name.toLowerCase().includes(lowerQuery) ?? p.description.toLowerCase().includes(lowerQuery),
   );
 };
 
@@ -451,19 +458,17 @@ export const filterProducts = (filters: {
   }
 
   if (filters.minPrice !== undefined) {
-    results = results.filter((p) => p.priceDiscount >= filters.minPrice!);
+    results = results.filter((p) => p.priceDiscount >= (filters.minPrice ?? 0));
   }
 
   if (filters.maxPrice !== undefined) {
-    results = results.filter((p) => p.priceDiscount <= filters.maxPrice!);
+    results = results.filter((p) => p.priceDiscount <= (filters.maxPrice ?? 0));
   }
 
   if (filters.searchQuery) {
     const query = filters.searchQuery.toLowerCase();
     results = results.filter(
-      (p) =>
-        p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query)
+      (p) => p.name.toLowerCase().includes(query) ?? p.description.toLowerCase().includes(query),
     );
   }
 

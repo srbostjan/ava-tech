@@ -12,10 +12,7 @@ export const formatPrice = (cents: number): string => {
 };
 
 // Calculate discount percentage
-export const calculateDiscountPercentage = (
-  original: number,
-  discount: number
-): number => {
+export const calculateDiscountPercentage = (original: number, discount: number): number => {
   if (original <= 0) return 0;
   return Math.round(((original - discount) / original) * 100);
 };
@@ -29,12 +26,14 @@ export const formatWhatsAppUrl = (phoneNumber: string, message: string): string 
 };
 
 // Generate WhatsApp message for cart checkout
-export const generateCartWhatsAppMessage = (items: Array<{
-  name: string;
-  quantity: number;
-  variant?: string;
-  price: number;
-}>): string => {
+export const generateCartWhatsAppMessage = (
+  items: Array<{
+    name: string;
+    quantity: number;
+    variant?: string;
+    price: number;
+  }>,
+): string => {
   let message = '¡Hola! Me gustaría hacer un pedido:\n\n';
 
   items.forEach((item, index) => {
@@ -45,7 +44,7 @@ export const generateCartWhatsAppMessage = (items: Array<{
     message += ` - Cantidad: ${item.quantity} - ${formatPrice(item.price * item.quantity)}\n`;
   });
 
-  const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   message += `\nTotal: ${formatPrice(total)}\n\n¡Gracias!`;
 
   return message;

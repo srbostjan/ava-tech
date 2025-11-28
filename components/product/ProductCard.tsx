@@ -7,8 +7,9 @@
 
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
+
 import { Product } from '@/lib/types';
 import { formatPrice, calculateDiscountPercentage } from '@/lib/utils/format';
 
@@ -18,11 +19,11 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   // Get thumbnail image
-  const thumbnail = product.images.find((img) => img.isThumbnail) || product.images[0];
+  const thumbnail = product.images.find((img) => img.isThumbnail) ?? product.images[0];
 
   const discountPercentage = calculateDiscountPercentage(
     product.priceOriginal,
-    product.priceDiscount
+    product.priceDiscount,
   );
 
   const hasDiscount = discountPercentage > 0;
@@ -35,7 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {thumbnail && (
             <Image
               src={thumbnail.url}
-              alt={thumbnail.alt || product.name}
+              alt={thumbnail.alt ?? product.name}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -58,9 +59,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">
-            {product.description}
-          </p>
+          <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">{product.description}</p>
 
           {/* Pricing */}
           <div className="mt-auto">

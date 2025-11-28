@@ -6,13 +6,14 @@
 
 'use client';
 
+import { Search, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Search, ShoppingCart } from 'lucide-react';
-import { useCartStore } from '@/lib/store/cartStore';
-import { Button } from '@/components/ds/atomic/Button';
+
 import { Badge } from '@/components/ds/atomic/Badge';
+import { Button } from '@/components/ds/atomic/Button';
+import { useCartStore } from '@/lib/store/cartStore';
 
 export default function Header() {
   const router = useRouter();

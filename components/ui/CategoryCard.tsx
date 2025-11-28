@@ -6,8 +6,9 @@
 
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
+
 import { Category } from '@/lib/types';
 
 interface CategoryCardProps {
@@ -32,7 +33,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           />
         )}
         {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
         {/* Category Name on Image */}
         <div className="absolute bottom-0 left-0 right-0 p-4">

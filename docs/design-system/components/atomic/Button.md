@@ -141,7 +141,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
-        disabled={disabled || loading}
+        disabled={disabled ?? loading}
         {...props}
       >
         {loading && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -276,7 +276,7 @@ export function IconButton({ icon, ...props }: { icon: React.ReactNode } & Butto
   return (
     <Button
       className="aspect-square p-0"
-      aria-label={props['aria-label'] || 'Button'}
+      aria-label={props['aria-label'] ?? 'Button'}
       {...props}
     >
       {icon}

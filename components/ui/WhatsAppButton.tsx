@@ -7,8 +7,8 @@
 
 'use client';
 
-import { formatWhatsAppUrl, getDefaultWhatsAppMessage } from '@/lib/utils/format';
 import { WHATSAPP_NUMBER } from '@/lib/utils/constants';
+import { formatWhatsAppUrl, getDefaultWhatsAppMessage } from '@/lib/utils/format';
 
 interface WhatsAppButtonProps {
   message?: string;
@@ -22,7 +22,7 @@ export default function WhatsAppButton({
   fixed = true,
 }: WhatsAppButtonProps) {
   const handleClick = () => {
-    const msg = message || getDefaultWhatsAppMessage();
+    const msg = message ?? getDefaultWhatsAppMessage();
     const url = formatWhatsAppUrl(WHATSAPP_NUMBER, msg);
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -30,9 +30,7 @@ export default function WhatsAppButton({
   const baseClasses =
     'bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center';
 
-  const fixedClasses = fixed
-    ? 'fixed bottom-6 right-6 w-16 h-16 z-50'
-    : 'w-full py-3 px-6';
+  const fixedClasses = fixed ? 'fixed bottom-6 right-6 w-16 h-16 z-50' : 'w-full py-3 px-6';
 
   return (
     <button
