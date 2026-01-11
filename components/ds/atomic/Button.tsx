@@ -15,16 +15,17 @@ import { cn } from '@/lib/utils/cn';
 
 const buttonVariants = cva(
   // Base styles
-  'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2',
+  'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
   {
     variants: {
       variant: {
-        primary: 'bg-accent-500 text-white hover:bg-accent-600 shadow-sm hover:shadow-md',
+        primary: 'bg-brand-500 text-white hover:bg-brand-600 shadow-sm hover:shadow-md',
         secondary:
           'border-2 border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white',
-        ghost: 'text-accent-500 hover:bg-accent-50',
+        'secondary-brand': 'bg-white text-brand-600 hover:bg-brand-100 hover:text-brand-900',
+        ghost: 'text-brand-500 hover:bg-brand-50',
         danger: 'bg-error-500 text-white hover:bg-error-600 shadow-sm hover:shadow-md',
-        outline: 'border-2 border-accent-500 text-accent-500 hover:bg-accent-500 hover:text-white',
+        outline: 'border-2 border-brand-500 text-brand-500 hover:bg-brand-500 hover:text-white',
       },
       size: {
         sm: 'h-9 px-4 text-sm rounded-md',

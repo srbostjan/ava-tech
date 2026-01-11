@@ -74,19 +74,6 @@ const eslintConfig = defineConfig([
       'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
       'react/self-closing-comp': 'error',
       'react/no-array-index-key': 'warn',
-
-      // Import rules
-      'import/order': [
-        'error',
-        {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object'],
-          'newlines-between': 'always',
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true,
-          },
-        },
-      ],
       'import/no-duplicates': 'error',
       'import/newline-after-import': 'error',
 

@@ -1,15 +1,8 @@
-/**
- * Search Page - Refactored with Design System
- *
- * Allows users to search and filter products
- */
-
 'use client';
 
 import { Search, X } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, useMemo, Suspense } from 'react';
-
 import { Button } from '@/components/ds/atomic/Button';
 import { ProductCard } from '@/components/ds/molecular/ProductCard';
 import { mockCategories } from '@/lib/mock/categories';
@@ -17,14 +10,26 @@ import { filterProducts } from '@/lib/mock/products';
 
 function SearchContent() {
   const searchParams = useSearchParams();
-  const initialQuery = searchParams.get('q') ?? '';
-  const initialCategory = searchParams.get('category') ?? '';
 
-  const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  // Derive values from URL params
+  const queryFromUrl = searchParams.get('q') ?? '';
+  const categoryFromUrl = searchParams.get('category') ?? '';
+
+  const [searchQuery, setSearchQuery] = useState(queryFromUrl);
+  const [debouncedQuery, setDebouncedQuery] = useState(queryFromUrl);
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl);
   const [minPrice, setMinPrice] = useState<number | undefined>();
   const [maxPrice, setMaxPrice] = useState<number | undefined>();
+
+  // Sync state with URL params when they change
+  useEffect(() => {
+    setSearchQuery(queryFromUrl);
+    setDebouncedQuery(queryFromUrl);
+  }, [queryFromUrl]);
+
+  useEffect(() => {
+    setSelectedCategory(categoryFromUrl);
+  }, [categoryFromUrl]);
 
   // Debounce search query
   useEffect(() => {

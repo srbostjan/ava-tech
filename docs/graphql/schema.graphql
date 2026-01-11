@@ -1,47 +1,86 @@
+# ==========================================
 # GraphQL Schema for AWS AppSync
-# This schema is designed to work with DynamoDB as the data source
-# and can be integrated with AWS Amplify
+# E-Commerce with WhatsApp Checkout Flow
+# ==========================================
+#
+# This schema is optimized for an e-commerce application where:
+# - Users browse products without authentication
+# - Cart is managed in frontend (localStorage via Zustand)
+# - Checkout happens via WhatsApp (no payment gateway)
+# - Inventory is managed from a separate CMS
+# - Analytics are tracked for business insights
+#
+# Architecture:
+# - DynamoDB as data source
+# - AppSync with public API key for catalog queries
+# - IAM auth for CMS operations (create/update products)
+# - Optional analytics tracking for WhatsApp inquiries
 
-# ------------------------------
-# Types
-# ------------------------------
+# ------------------------------------------
+# PRODUCT CATALOG (Public Read-Only)
+# ------------------------------------------
 
-type Product @model @auth(rules: [{ allow: public }]) {
+type Product @model
+  @auth(rules: [
+    { allow: public, operations: [read] },
+    { allow: private, provider: iam }  # CMS can create/update
+  ])
+{
   id: ID!
+  sku: String @index(name: "productBySKU")
   name: String!
   description: String!
-  categoryId: ID! @index(name: "productsByCategory")
+
+  # Category relationship
+  categoryId: ID! @index(
+    name: "productsByCategory",
+    sortKeyFields: ["priceDiscount"]  # Sort by price within category
+  )
   category: Category @belongsTo(fields: ["categoryId"])
-  specs: [ProductSpec]
-  priceOriginal: Int! # Price in cents (e.g., 12999 = $129.99)
-  priceDiscount: Int! # Discounted price in cents
-  images: [ProductImage]
+
+  # Product details
+  specs: AWSJSON  # Flexible JSON for specs like { "RAM": "16GB", "Processor": "i7" }
+  priceOriginal: Int!  # Price in cents (e.g., 12999 = $129.99)
+  priceDiscount: Int!  # Discounted price in cents
+  images: AWSJSON      # Array of images as JSON
+
+  # Variants (colors, sizes, etc.)
   variants: [ProductVariant] @hasMany(indexName: "variantsByProduct", fields: ["id"])
-  featured: Boolean
+
+  # Featured products (for homepage)
+  featured: Boolean @index(
+    name: "productsByFeatured",
+    sortKeyFields: ["createdAt"]  # Featured products sorted by date
+  )
+
+  # Stock (informative only, updated from CMS)
+  stockAvailable: Int
+  isAvailable: Boolean  # true/false to show "Out of Stock"
+
+  # SEO & Analytics
+  slug: String @index(name: "productBySlug")  # URL-friendly name
+  views: Int           # Incremented when product is viewed
+  inquiries: Int       # How many times added to WhatsApp inquiries
+
+  # Timestamps
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
 
-type ProductSpec {
-  key: String!
-  value: String!
-}
-
-type ProductImage {
-  url: String! # S3 URL: s3://bucket/products/{productId}/...
-  isThumbnail: Boolean
-  variantId: ID
-  alt: String
-}
-
-type ProductVariant @model @auth(rules: [{ allow: public }]) {
+type ProductVariant @model
+  @auth(rules: [
+    { allow: public, operations: [read] },
+    { allow: private, provider: iam }
+  ])
+{
   id: ID!
   productId: ID! @index(name: "variantsByProduct")
   product: Product @belongsTo(fields: ["productId"])
-  name: String! # e.g., "Red", "XL"
+  name: String!        # e.g., "Titanio Natural - 256GB", "Rojo", "XL"
   type: VariantType!
   stockAvailable: Int
-  images: [ProductImage]
+  isAvailable: Boolean
+  images: AWSJSON      # Variant-specific images
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
@@ -53,133 +92,247 @@ enum VariantType {
   STYLE
 }
 
-type Category @model @auth(rules: [{ allow: public }]) {
+type Category @model
+  @auth(rules: [
+    { allow: public, operations: [read] },
+    { allow: private, provider: iam }
+  ])
+{
   id: ID!
+  slug: String @index(name: "categoryBySlug")
   name: String!
   description: String
-  imageUrl: String # S3 URL
-  parentCategoryId: ID
+  imageUrl: String  # S3 URL or external image
+  parentCategoryId: ID  # For nested categories
   products: [Product] @hasMany(indexName: "productsByCategory", fields: ["id"])
+  order: Int        # Display order in UI
+  isActive: Boolean
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
 
-# Cart and Order Management
-# Note: Cart should be user-specific when authentication is enabled
+# ------------------------------------------
+# WHATSAPP ANALYTICS (Optional but Recommended)
+# ------------------------------------------
 
-type Cart @model @auth(rules: [{ allow: owner }, { allow: public, operations: [read] }]) {
+type WhatsAppInquiry @model
+  @auth(rules: [
+    { allow: public, operations: [create] },  # Anyone can create
+    { allow: private, provider: iam }          # Only CMS can read/update
+  ])
+{
   id: ID!
-  userId: String @index(name: "cartByUser")
-  items: [CartItem] @hasMany(indexName: "itemsByCart", fields: ["id"])
-  status: CartStatus! # ACTIVE, CHECKED_OUT, ABANDONED
-  createdAt: AWSDateTime
+
+  # Anonymous identification
+  sessionId: String! @index(name: "inquiriesBySession")
+  fingerprint: String  # Browser fingerprint (optional)
+
+  # Optional customer data (captured before WhatsApp redirect)
+  customerName: String
+  customerEmail: String @index(name: "inquiriesByEmail")
+  customerPhone: String
+
+  # Inquiry details
+  items: AWSJSON!      # [{ productId, variantId, quantity, priceAtInquiry, productName }]
+  totalAmount: Int!
+  totalItems: Int!
+
+  # Generated WhatsApp message
+  message: String
+
+  # Metadata
+  source: InquirySource
+  userAgent: String
+  referrer: String
+
+  # Conversion tracking (updated from CMS)
+  status: InquiryStatus
+  convertedToSale: Boolean
+  saleAmount: Int
+  notes: String        # Seller notes
+
+  # Timestamps
+  createdAt: AWSDateTime @index(
+    name: "inquiriesByDate",
+    sortKeyFields: ["totalAmount"]
+  )
   updatedAt: AWSDateTime
 }
 
-enum CartStatus {
-  ACTIVE
-  CHECKED_OUT
-  ABANDONED
+enum InquirySource {
+  WEB
+  MOBILE
+  PWA
+  FACEBOOK
+  INSTAGRAM
 }
 
-type CartItem @model @auth(rules: [{ allow: owner }, { allow: public, operations: [read] }]) {
-  id: ID!
-  cartId: ID! @index(name: "itemsByCart")
-  cart: Cart @belongsTo(fields: ["cartId"])
-  productId: ID!
-  product: Product @hasOne(fields: ["productId"])
-  variantId: ID
-  variant: ProductVariant @hasOne(fields: ["variantId"])
-  quantity: Int!
-  priceAtAdd: Int! # Capture price at time of adding to cart
-  createdAt: AWSDateTime
-  updatedAt: AWSDateTime
+enum InquiryStatus {
+  PENDING      # Just created
+  CONTACTED    # Customer contacted via WhatsApp
+  NEGOTIATING  # In negotiation
+  CONVERTED    # Sale completed
+  LOST         # Did not convert
+  SPAM         # Invalid inquiry
 }
 
-# Optional: User type for future authentication with Cognito
-type User @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  email: String! @index(name: "userByEmail")
-  name: String
-  phone: String
-  carts: [Cart] @hasMany(indexName: "cartByUser", fields: ["id"])
-  createdAt: AWSDateTime
-  updatedAt: AWSDateTime
-}
-
-# ------------------------------
-# Input Types for Filters
-# ------------------------------
+# ------------------------------------------
+# INPUT TYPES
+# ------------------------------------------
 
 input ProductFilterInput {
   categoryId: ID
   minPrice: Int
   maxPrice: Int
-  featured: Boolean
   searchQuery: String
+  isAvailable: Boolean
 }
 
-# ------------------------------
-# Custom Queries (in addition to auto-generated ones)
-# ------------------------------
+input CreateWhatsAppInquiryInput {
+  sessionId: String!
+  fingerprint: String
+  customerName: String
+  customerEmail: String
+  customerPhone: String
+  items: AWSJSON!
+  totalAmount: Int!
+  totalItems: Int!
+  message: String!
+  source: InquirySource
+  userAgent: String
+  referrer: String
+}
+
+# ------------------------------------------
+# QUERIES
+# ------------------------------------------
 
 type Query {
   # Search products with filters
   searchProducts(
     filter: ProductFilterInput
-    limit: Int
+    sort: ProductSort = RELEVANCE
+    limit: Int = 20
     nextToken: String
-  ): ProductConnection @function(name: "searchProducts-${env}")
+  ): ProductConnection
+    @function(name: "searchProducts-${env}")
 
-  # Get featured products
+  # Featured products (homepage)
   listFeaturedProducts(
-    limit: Int
+    limit: Int = 10
+  ): [Product]
+
+  # Products by category
+  listProductsByCategory(
+    categoryId: ID
+    slug: String  # Alternative to ID
+    sort: ProductSort = PRICE_ASC
+    limit: Int = 20
     nextToken: String
   ): ProductConnection
 
-  # Get products by category
-  listProductsByCategory(
-    categoryId: ID!
-    limit: Int
-    nextToken: String
-  ): ProductConnection
+  # Single product
+  getProduct(id: ID, slug: String): Product
+
+  # Related products (based on category)
+  getRelatedProducts(
+    productId: ID!
+    limit: Int = 6
+  ): [Product]
+    @function(name: "getRelatedProducts-${env}")
+
+  # Analytics (CMS only)
+  getInquiryStats(
+    startDate: AWSDateTime!
+    endDate: AWSDateTime!
+  ): InquiryStats
+    @function(name: "getInquiryStats-${env}")
+    @auth(rules: [{ allow: private, provider: iam }])
 }
 
 type ProductConnection {
-  items: [Product]
+  items: [Product!]!
   nextToken: String
+  total: Int
 }
 
-# ------------------------------
-# Custom Mutations
-# ------------------------------
+type InquiryStats {
+  totalInquiries: Int!
+  totalRevenue: Int!
+  conversionRate: Float!
+  topProducts: [ProductStat!]!
+  inquiriesByDate: [DateStat!]!
+}
+
+type ProductStat {
+  productId: ID!
+  productName: String!
+  inquiryCount: Int!
+  revenue: Int!
+}
+
+type DateStat {
+  date: String!
+  inquiries: Int!
+  revenue: Int!
+}
+
+enum ProductSort {
+  RELEVANCE
+  PRICE_ASC
+  PRICE_DESC
+  NEWEST
+  POPULAR
+}
+
+# ------------------------------------------
+# MUTATIONS
+# ------------------------------------------
 
 type Mutation {
-  # Add item to cart (will create cart if doesn't exist)
-  addToCart(
+  # Create WhatsApp inquiry (analytics tracking)
+  createWhatsAppInquiry(
+    input: CreateWhatsAppInquiryInput!
+  ): WhatsAppInquiry
+    @function(name: "createWhatsAppInquiry-${env}")
+
+  # Increment product views (analytics)
+  incrementProductViews(
     productId: ID!
-    variantId: ID
-    quantity: Int!
-  ): CartItem @function(name: "addToCart-${env}")
+  ): Product
+    @function(name: "incrementProductViews-${env}")
 
-  # Update cart item quantity
-  updateCartItemQuantity(
-    cartItemId: ID!
-    quantity: Int!
-  ): CartItem @function(name: "updateCartItemQuantity-${env}")
+  # CMS: Update product stock
+  updateProductStock(
+    productId: ID!
+    stockAvailable: Int!
+    isAvailable: Boolean!
+  ): Product
+    @auth(rules: [{ allow: private, provider: iam }])
 
-  # Clear entire cart
-  clearCart(cartId: ID!): Cart @function(name: "clearCart-${env}")
+  # CMS: Update inquiry status
+  updateInquiryStatus(
+    inquiryId: ID!
+    status: InquiryStatus!
+    convertedToSale: Boolean
+    saleAmount: Int
+    notes: String
+  ): WhatsAppInquiry
+    @auth(rules: [{ allow: private, provider: iam }])
 }
 
-# ------------------------------
-# Subscriptions (for real-time updates)
-# ------------------------------
+# ------------------------------------------
+# SUBSCRIPTIONS (For CMS real-time updates)
+# ------------------------------------------
 
 type Subscription {
-  onCartUpdated(userId: String!): Cart
-    @aws_subscribe(mutations: ["addToCart", "updateCartItemQuantity", "clearCart"])
+  # CMS: Listen to new inquiries
+  onNewInquiry: WhatsAppInquiry
+    @aws_subscribe(mutations: ["createWhatsAppInquiry"])
+    @auth(rules: [{ allow: private, provider: iam }])
 
-  onProductUpdated(id: ID!): Product
-    @aws_subscribe(mutations: ["updateProduct"])
+  # CMS: Product stock updates
+  onProductStockUpdated(productId: ID): Product
+    @aws_subscribe(mutations: ["updateProductStock"])
+    @auth(rules: [{ allow: private, provider: iam }])
 }

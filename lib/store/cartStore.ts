@@ -1,19 +1,3 @@
-/**
- * Cart Store using Zustand
- *
- * This store manages the shopping cart state on the client side.
- *
- * Future AWS Amplify Integration:
- * - Cart items will be synced to DynamoDB using GraphQL mutations
- * - When user is authenticated (Cognito), cart will be persisted per user
- * - GraphQL subscriptions can be used for real-time cart updates across devices
- *
- * Example future mutations:
- * - mutation CreateCartItem($input: CreateCartItemInput!) { createCartItem(input: $input) }
- * - mutation UpdateCartItem($input: UpdateCartItemInput!) { updateCartItem(input: $input) }
- * - mutation DeleteCartItem($id: ID!) { deleteCartItem(id: $id) }
- */
-
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -25,6 +9,25 @@ interface CartStore extends Cart {
   removeItem: (productId: string, variantId?: string) => void;
   updateQuantity: (productId: string, quantity: number, variantId?: string) => void;
   clearCart: () => void;
+
+  // WhatsApp Integration
+  generateWhatsAppMessage: () => string;
+  generateWhatsAppUrl: (customerName?: string) => string;
+
+  // Analytics (optional - for future AppSync integration)
+  getAnalyticsData: () => {
+    sessionId: string;
+    items: Array<{
+      productId: string;
+      productName: string;
+      variantId?: string;
+      variantName?: string;
+      quantity: number;
+      priceAtInquiry: number;
+    }>;
+    totalAmount: number;
+    totalItems: number;
+  };
 
   // Private methods for recalculation
   recalculate: () => void;
@@ -51,9 +54,26 @@ const calculateTotals = (items: CartItem[]) => {
   };
 };
 
+// Get or create session ID for analytics
+const getSessionId = (): string => {
+  if (typeof window === 'undefined') return '';
+
+  let sessionId = localStorage.getItem('sessionId');
+  if (!sessionId) {
+    // Generate UUID v4
+    sessionId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+    localStorage.setItem('sessionId', sessionId);
+  }
+  return sessionId;
+};
+
 export const useCartStore = create<CartStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       items: [],
       totalItems: 0,
       subtotal: 0,
@@ -137,6 +157,76 @@ export const useCartStore = create<CartStore>()(
         });
       },
 
+      // ✅ NEW: Generate WhatsApp message
+      generateWhatsAppMessage: () => {
+        const state = get();
+        const items = state.items;
+
+        if (items.length === 0) {
+          return '¡Hola! Me gustaría obtener más información sobre sus productos.';
+        }
+
+        let message = '🛒 *¡Hola! Me interesan estos productos:*\n\n';
+
+        items.forEach((item, index) => {
+          const variantText = item.variant ? ` - ${item.variant.name}` : '';
+          const price = (item.priceAtAdd / 100).toFixed(2);
+          const subtotal = ((item.priceAtAdd * item.quantity) / 100).toFixed(2);
+
+          message += `*${index + 1}. ${item.product.name}*${variantText}\n`;
+          message += `   📦 Cantidad: ${item.quantity}\n`;
+          message += `   💵 Precio: $${price}\n`;
+          message += `   💰 Subtotal: $${subtotal}\n\n`;
+        });
+
+        const total = (state.total / 100).toFixed(2);
+        const discount = (state.totalDiscount / 100).toFixed(2);
+
+        if (state.totalDiscount > 0) {
+          message += `🎉 *Ahorro total: $${discount}*\n`;
+        }
+
+        message += `💰 *TOTAL: $${total}*\n\n`;
+        message += '¿Podrían darme más información y ayudarme con la compra?';
+
+        return message;
+      },
+
+      // ✅ NEW: Generate WhatsApp URL with pre-filled message
+      generateWhatsAppUrl: (customerName?: string) => {
+        const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5215512345678';
+        let message = get().generateWhatsAppMessage();
+
+        // Add customer name if provided
+        if (customerName?.trim()) {
+          message = `Mi nombre es *${customerName.trim()}*\n\n${message}`;
+        }
+
+        // Encode message for URL
+        const encodedMessage = encodeURIComponent(message);
+
+        return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+      },
+
+      // ✅ NEW: Get analytics data (for future AppSync integration)
+      getAnalyticsData: () => {
+        const state = get();
+
+        return {
+          sessionId: getSessionId(),
+          items: state.items.map((item) => ({
+            productId: item.productId,
+            productName: item.product.name,
+            variantId: item.variantId,
+            variantName: item.variant?.name,
+            quantity: item.quantity,
+            priceAtInquiry: item.priceAtAdd,
+          })),
+          totalAmount: state.total,
+          totalItems: state.totalItems,
+        };
+      },
+
       recalculate: () => {
         set((state) => {
           const totals = calculateTotals(state.items);
@@ -146,8 +236,8 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'cart-storage', // localStorage key
-      // Future: Replace localStorage with AWS AppSync + DynamoDB
-      // When user is authenticated, sync cart to cloud
+      // Cart persists in localStorage
+      // When AppSync is integrated, we can sync to cloud using getAnalyticsData()
     },
   ),
 );

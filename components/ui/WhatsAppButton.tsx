@@ -28,7 +28,7 @@ export default function WhatsAppButton({
   };
 
   const baseClasses =
-    'bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center';
+    'bg-whatsapp-500 hover:bg-whatsapp-600 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center';
 
   const fixedClasses = fixed ? 'fixed bottom-6 right-6 w-16 h-16 z-50' : 'w-full py-3 px-6';
 

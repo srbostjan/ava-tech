@@ -32,6 +32,31 @@ export interface ProductVariant {
   images?: ProductImage[]; // Each variant can have its own images
 }
 
+// Product Review
+export interface ProductReview {
+  id: string;
+  productId: string;
+  userName: string;
+  userLocation?: string;
+  rating: number; // 1-5 stars
+  comment: string;
+  createdAt: string;
+  verified?: boolean; // Verified purchase
+}
+
+// Product Rating Summary
+export interface ProductRating {
+  averageRating: number; // 0-5
+  totalReviews: number;
+  distribution: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
+}
+
 // Main Product entity
 export interface Product {
   id: string;
@@ -44,6 +69,10 @@ export interface Product {
   images: ProductImage[];
   variants: ProductVariant[];
   featured?: boolean; // For showing on home page
+  rating?: ProductRating; // Product rating summary
+  stockCount?: number; // Available stock (for urgency signals)
+  viewsToday?: number; // Views today (for social proof)
+  soldCount?: number; // Total units sold
   createdAt?: string; // ISO date string - will be managed by DynamoDB
   updatedAt?: string; // ISO date string - will be managed by DynamoDB
 }

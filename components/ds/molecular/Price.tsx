@@ -71,7 +71,7 @@ export function Price({
     >
       {/* Precio con descuento */}
       <div className="flex items-baseline gap-2">
-        <span className={cn('font-bold text-success-500', sizeClasses[size].discount)}>
+        <span className={cn('font-bold text-brand-700', sizeClasses[size].discount)}>
           {formatPrice(discount)}
         </span>
 

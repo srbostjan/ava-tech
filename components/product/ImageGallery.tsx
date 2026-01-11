@@ -24,8 +24,8 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
 
   if (!images) {
     return (
-      <div className="w-full h-96 bg-gray-200 flex items-center justify-center rounded-lg">
-        <p className="text-gray-500">No hay imágenes disponibles</p>
+      <div className="w-full h-96 bg-neutral-200 flex items-center justify-center rounded-lg">
+        <p className="text-neutral-500">No hay imágenes disponibles</p>
       </div>
     );
   }
@@ -35,7 +35,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
   return (
     <div className="space-y-4">
       {/* Main Image */}
-      <div className="relative w-full h-96 md:h-[500px] bg-gray-100 rounded-lg overflow-hidden">
+      <div className="relative w-full h-96 md:h-[500px] bg-neutral-100 rounded-lg overflow-hidden">
         <Image
           src={selectedImage.url}
           alt={selectedImage.alt ?? `${productName} - Imagen ${selectedImageIndex + 1}`}
@@ -55,8 +55,8 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
               onClick={() => setSelectedImageIndex(index)}
               className={`relative h-20 md:h-24 rounded-lg overflow-hidden border-2 transition-all ${
                 index === selectedImageIndex
-                  ? 'border-blue-600 ring-2 ring-blue-300'
-                  : 'border-gray-300 hover:border-gray-400'
+                  ? 'border-brand-600 ring-2 ring-brand-300'
+                  : 'border-neutral-300 hover:border-neutral-400'
               }`}
             >
               <Image
@@ -72,7 +72,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
       )}
 
       {/* Image Counter */}
-      <div className="text-center text-sm text-gray-600">
+      <div className="text-center text-sm text-neutral-600">
         Imagen {selectedImageIndex + 1} de {images.length}
       </div>
     </div>

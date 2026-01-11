@@ -12,20 +12,21 @@ import { HTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/lib/utils/cn';
 
 const badgeVariants = cva(
-  'inline-flex items-center justify-center font-semibold transition-colors',
+  'inline-flex items-center justify-center font-bold transition-colors shadow-sm',
   {
     variants: {
       variant: {
-        default: 'bg-neutral-100 text-neutral-900',
-        primary: 'bg-accent-500 text-white',
-        success: 'bg-success-500 text-white',
-        error: 'bg-error-500 text-white',
-        warning: 'bg-warning-500 text-neutral-900',
-        outline: 'border-2 border-neutral-100 text-neutral-900',
+        default: 'bg-neutral-800 text-white',
+        primary: 'bg-blue-600 text-white',
+        success: 'bg-green-700 text-white',
+        error: 'bg-red-600 text-white',
+        warning: 'bg-amber-500 text-neutral-950',
+        outline: 'border-2 border-neutral-800 bg-white text-neutral-950',
+        urgency: 'bg-brand-100 text-brand-800',
       },
       size: {
-        sm: 'text-xs px-2 py-0.5 rounded-full',
-        md: 'text-sm px-3 py-1 rounded-full',
+        sm: 'text-xs px-2.5 py-1 rounded-md',
+        md: 'text-sm px-3.5 py-1.5 rounded-md',
       },
     },
     defaultVariants: {

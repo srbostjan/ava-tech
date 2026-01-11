@@ -1,32 +1,12 @@
-/**
- * Product Detail Page
- *
- * Displays detailed product information including:
- * - Image gallery
- * - Specifications
- * - Variants selector
- * - Add to cart functionality
- *
- * Future: Product data will be fetched from AppSync GraphQL API
- * Example:
- *   query GetProduct($id: ID!) {
- *     getProduct(id: $id) {
- *       id name description categoryId specs { key value }
- *       priceOriginal priceDiscount
- *       images { url isThumbnail variantId alt }
- *       variants { id name type stockAvailable }
- *     }
- *   }
- */
-
 'use client';
 
 import { ShoppingCart, Check } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, notFound } from 'next/navigation';
 import { useState, use } from 'react';
-
+import { Badge } from '@/components/ds/atomic/Badge';
 import { Button } from '@/components/ds/atomic/Button';
+import { Rating } from '@/components/ds/atomic/Rating';
 import { Price } from '@/components/ds/molecular/Price';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductSpecs from '@/components/product/ProductSpecs';
@@ -118,6 +98,36 @@ export default function ProductPage({ params }: ProductPageProps) {
             {/* Product Name */}
             <h1 className="text-3xl font-bold text-neutral-900 mb-4">{product.name}</h1>
 
+            {/* Rating & Social Proof */}
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              {product.rating && (
+                <Rating
+                  rating={product.rating.averageRating}
+                  totalReviews={product.rating.totalReviews}
+                  size="md"
+                />
+              )}
+              {product.soldCount !== undefined && product.soldCount > 50 && (
+                <Badge variant="success" size="sm">
+                  ✓ {product.soldCount}+ vendidos
+                </Badge>
+              )}
+            </div>
+
+            {/* Urgency Signals */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              {product.stockCount !== undefined && product.stockCount <= 10 && (
+                <Badge variant="error" size="md">
+                  ⚠️ ¡Solo quedan {product.stockCount} en stock!
+                </Badge>
+              )}
+              {product.viewsToday !== undefined && product.viewsToday > 20 && (
+                <Badge variant="outline" size="md">
+                  🔥 {product.viewsToday} personas viendo este producto ahora
+                </Badge>
+              )}
+            </div>
+
             {/* Category */}
             <p className="text-sm text-neutral-700 mb-6">
               Categoría:{' '}
@@ -185,7 +195,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Action Buttons */}
-            <div className="space-y-3">
+            <div className="space-y-3 mb-6">
               <Button
                 onClick={handleAddToCart}
                 variant={addedToCart ? 'outline' : 'primary'}
@@ -203,6 +213,61 @@ export default function ProductPage({ params }: ProductPageProps) {
               </Button>
 
               <WhatsAppButton message={whatsappMessage} fixed={false} className="w-full" />
+            </div>
+
+            {/* Shipping & Policies Info */}
+            <div className="border-t border-neutral-200 pt-6 space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
+                  <span className="text-brand-600 text-lg">🚚</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-neutral-900 mb-1">Envío Nacional</h4>
+                  <p className="text-sm text-neutral-600">
+                    Gratis en compras superiores a $200.000. Entrega en 3-5 días hábiles a todo
+                    Colombia.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
+                  <span className="text-brand-600 text-lg">✓</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-neutral-900 mb-1">Garantía Oficial</h4>
+                  <p className="text-sm text-neutral-600">
+                    Todos nuestros productos incluyen garantía del fabricante. Soporte técnico
+                    disponible.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
+                  <span className="text-brand-600 text-lg">💳</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-neutral-900 mb-1">Financiación Disponible</h4>
+                  <p className="text-sm text-neutral-600">
+                    Paga a crédito. Hasta 36 cuotas sin intereses. Contáctanos por WhatsApp para más
+                    información.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
+                  <span className="text-brand-600 text-lg">🔄</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-neutral-900 mb-1">Devoluciones</h4>
+                  <p className="text-sm text-neutral-600">
+                    30 días para devoluciones. Producto debe estar en perfectas condiciones y con
+                    empaque original.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

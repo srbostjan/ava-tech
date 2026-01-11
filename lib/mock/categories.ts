@@ -1,5 +1,5 @@
 /**
- * Mock Categories Data
+ * Mock Categories Data - AVA Tecnología
  *
  * In production, this data will come from DynamoDB via AppSync GraphQL API
  * Structure simulates what would be returned from:
@@ -10,34 +10,28 @@ import { Category } from '@/lib/types';
 
 export const mockCategories: Category[] = [
   {
-    id: 'cat-001',
-    name: 'Electrónica',
-    description: 'Dispositivos electrónicos y gadgets',
-    imageUrl: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500',
+    id: 'celulares',
+    name: 'Celulares',
+    description: 'Smartphones y teléfonos móviles de última generación',
+    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500',
   },
   {
-    id: 'cat-002',
-    name: 'Ropa y Moda',
-    description: 'Vestimenta y accesorios de moda',
-    imageUrl: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=500',
+    id: 'computadores',
+    name: 'Computadores',
+    description: 'Laptops, PCs de escritorio y equipos portátiles',
+    imageUrl: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500',
   },
   {
-    id: 'cat-003',
-    name: 'Hogar y Cocina',
-    description: 'Artículos para el hogar y la cocina',
-    imageUrl: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500',
+    id: 'accesorios',
+    name: 'Accesorios',
+    description: 'Audífonos, cargadores, mouse, teclados y más',
+    imageUrl: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500',
   },
   {
-    id: 'cat-004',
-    name: 'Deportes',
-    description: 'Equipamiento deportivo y fitness',
-    imageUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500',
-  },
-  {
-    id: 'cat-005',
-    name: 'Libros',
-    description: 'Libros y material de lectura',
-    imageUrl: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=500',
+    id: 'electrodomesticos',
+    name: 'Electrodomésticos',
+    description: 'Neveras, lavadoras, aires acondicionados y más',
+    imageUrl: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500',
   },
 ];
 
