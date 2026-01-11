@@ -194,7 +194,7 @@ export const useCartStore = create<CartStore>()(
 
       // ✅ NEW: Generate WhatsApp URL with pre-filled message
       generateWhatsAppUrl: (customerName?: string) => {
-        const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5215512345678';
+        const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '573116882763';
         let message = get().generateWhatsAppMessage();
 
         // Add customer name if provided

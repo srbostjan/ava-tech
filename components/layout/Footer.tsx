@@ -15,37 +15,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-neutral-900 text-white mt-auto">
-      {/* Newsletter Section */}
-      <div className="border-b border-neutral-800">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-2xl font-bold mb-3">📧 Recibe Nuestras Ofertas</h3>
-            <p className="text-neutral-400 mb-6">
-              Suscríbete y recibe descuentos exclusivos, lanzamientos y promociones especiales
-              directo en tu correo.
-            </p>
-            <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="tu@email.com"
-                className="flex-1 px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 focus:outline-none transition-colors text-white placeholder:text-neutral-500"
-                required
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-semibold transition-colors whitespace-nowrap"
-              >
-                Suscribirse
-              </button>
-            </form>
-            <p className="text-xs text-neutral-500 mt-4">
-              Al suscribirte aceptas recibir correos promocionales. Puedes darte de baja en
-              cualquier momento.
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}

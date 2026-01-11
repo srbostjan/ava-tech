@@ -171,23 +171,25 @@ export default function ProductPage({ params }: ProductPageProps) {
             {/* Quantity Selector */}
             <div className="mb-6 pb-6 border-b border-neutral-100">
               <label className="block text-sm font-medium text-neutral-900 mb-3">Cantidad</label>
-              <div className="flex items-center gap-3">
+              <div className="inline-flex items-center bg-neutral-50 rounded-xl border border-neutral-200 p-1">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="bg-neutral-100 hover:bg-neutral-200 text-neutral-900 w-10 h-10 rounded-md font-bold transition-colors"
+                  className="w-12 h-12 flex items-center justify-center text-neutral-600 hover:text-neutral-900 hover:bg-white rounded-lg font-medium text-xl transition-all active:scale-95"
+                  aria-label="Disminuir cantidad"
                 >
-                  -
+                  −
                 </button>
                 <input
                   type="number"
                   min="1"
                   value={quantity}
                   onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) ?? 1))}
-                  className="w-20 text-center border-2 border-neutral-100 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/30 rounded-md py-2 font-semibold outline-none transition-colors"
+                  className="w-16 text-center bg-transparent text-neutral-900 font-semibold text-lg outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="bg-neutral-100 hover:bg-neutral-200 text-neutral-900 w-10 h-10 rounded-md font-bold transition-colors"
+                  className="w-12 h-12 flex items-center justify-center text-neutral-600 hover:text-neutral-900 hover:bg-white rounded-lg font-medium text-xl transition-all active:scale-95"
+                  aria-label="Aumentar cantidad"
                 >
                   +
                 </button>
@@ -200,19 +202,28 @@ export default function ProductPage({ params }: ProductPageProps) {
                 onClick={handleAddToCart}
                 variant={addedToCart ? 'outline' : 'primary'}
                 size="lg"
-                className="w-full"
+                className="w-full min-h-[56px] text-base font-bold shadow-lg hover:shadow-xl transition-shadow"
                 icon={
                   addedToCart ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />
                 }
               >
-                {addedToCart ? 'Agregado al carrito' : 'Agregar al carrito'}
+                {addedToCart ? '✓ Agregado al Carrito' : 'Agregar al Carrito'}
               </Button>
 
-              <Button onClick={handleBuyNow} variant="secondary" size="lg" className="w-full">
-                Comprar ahora
+              <Button
+                onClick={handleBuyNow}
+                variant="secondary"
+                size="lg"
+                className="w-full min-h-[56px] text-base font-bold"
+              >
+                🛒 Comprar Ahora
               </Button>
 
-              <WhatsAppButton message={whatsappMessage} fixed={false} className="w-full" />
+              <WhatsAppButton
+                message={whatsappMessage}
+                fixed={false}
+                className="w-full min-h-[56px]"
+              />
             </div>
 
             {/* Shipping & Policies Info */}
