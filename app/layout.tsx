@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
-import AmplifyProvider from './Amplifyprovider';
+// import AmplifyProvider from './Amplifyprovider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -18,12 +18,12 @@ export default function RootLayout({
   return (
     <html lang="es" className="light">
       <body className="font-sans antialiased flex flex-col min-h-screen bg-white">
-        <AmplifyProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <WhatsAppButton />
-        </AmplifyProvider>
+        {/* <AmplifyProvider> */}
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+        <WhatsAppButton />
+        {/* </AmplifyProvider> */}
       </body>
     </html>
   );
