@@ -2,14 +2,18 @@ import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 
 // ==========================================
 // Amplify Gen 2 Schema for E-Commerce
-// with WhatsApp Checkout Flow
+// with WhatsApp Checkout Flow + CMS
 // ==========================================
 //
 // Architecture:
 // - DynamoDB as data source
-// - Public API key for catalog queries (guest access)
-// - IAM auth for CMS operations (create/update products)
+// - Public API key for catalog queries (guest/customer access)
+// - Cognito User Pools auth for CMS operations (admin only)
 // - Analytics tracking for WhatsApp inquiries
+//
+// Authorization Strategy:
+// - Customers (public): Read-only access to products via API Key
+// - Admins (authenticated): Full CRUD on products, categories, inquiries
 
 // ------------------------------------------
 // ENUMS
@@ -89,8 +93,8 @@ const schema = a.schema({
       index('slug').queryField('getProductBySlug').name('productBySlug'),
     ])
     .authorization((allow) => [
-      allow.publicApiKey().to(['read']),
-      // For CMS operations, you can add allow.authenticated() when you add auth later
+      allow.publicApiKey().to(['read']), // Public read access for customers
+      allow.authenticated().to(['create', 'read', 'update', 'delete']), // Full CRUD for admins
     ]),
 
   ProductVariant: a
@@ -106,7 +110,10 @@ const schema = a.schema({
     .secondaryIndexes((index) => [
       index('productId').queryField('listVariantsByProduct').name('variantsByProduct'),
     ])
-    .authorization((allow) => [allow.publicApiKey().to(['read'])]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(['read']),
+      allow.authenticated().to(['create', 'read', 'update', 'delete']),
+    ]),
 
   Category: a
     .model({
@@ -122,7 +129,10 @@ const schema = a.schema({
     .secondaryIndexes((index) => [
       index('slug').queryField('getCategoryBySlug').name('categoryBySlug'),
     ])
-    .authorization((allow) => [allow.publicApiKey().to(['read'])]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(['read']),
+      allow.authenticated().to(['create', 'read', 'update', 'delete']),
+    ]),
 
   // ------------------------------------------
   // WHATSAPP ANALYTICS
@@ -163,7 +173,8 @@ const schema = a.schema({
       index('customerEmail').queryField('listInquiriesByEmail').name('inquiriesByEmail'),
     ])
     .authorization((allow) => [
-      allow.publicApiKey(), // Anyone can create inquiries (for WhatsApp tracking)
+      allow.publicApiKey().to(['create', 'read']), // Customers can create and view their inquiries
+      allow.authenticated().to(['create', 'read', 'update', 'delete']), // Admins have full access
     ]),
 
   // ------------------------------------------
@@ -208,10 +219,11 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'apiKey',
+    defaultAuthorizationMode: 'apiKey', // Default for public/customer access
     apiKeyAuthorizationMode: {
       expiresInDays: 365,
     },
+    // Cognito User Pools for admin authentication
   },
 });
 

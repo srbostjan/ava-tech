@@ -1,9 +1,17 @@
 import { defineBackend } from '@aws-amplify/backend';
+import { auth } from './auth/resource';
 import { data } from './data/resource';
 
 /**
- * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
+ * E-Commerce Backend Configuration
+ *
+ * Resources:
+ * - auth: Cognito authentication for CMS administrators
+ * - data: AppSync GraphQL API with DynamoDB for products & analytics
+ *
+ * @see https://docs.amplify.aws/react/build-a-backend/
  */
 defineBackend({
+  auth,
   data,
 });
