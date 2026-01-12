@@ -2,13 +2,14 @@
  * Utility functions for formatting data
  */
 
-// Format price in cents to display format (e.g., 12999 -> "$129.99")
-export const formatPrice = (cents: number): string => {
-  const dollars = cents / 100;
-  return new Intl.NumberFormat('es-MX', {
+// Format price in COP (Colombian Pesos) - prices are stored as whole numbers (e.g., 1299990 = $1,299,990 COP)
+export const formatPrice = (price: number): string => {
+  return new Intl.NumberFormat('es-CO', {
     style: 'currency',
-    currency: 'MXN',
-  }).format(dollars);
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
 };
 
 // Calculate discount percentage

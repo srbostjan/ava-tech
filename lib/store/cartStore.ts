@@ -170,8 +170,8 @@ export const useCartStore = create<CartStore>()(
 
         items.forEach((item, index) => {
           const variantText = item.variant ? ` - ${item.variant.name}` : '';
-          const price = (item.priceAtAdd / 100).toFixed(2);
-          const subtotal = ((item.priceAtAdd * item.quantity) / 100).toFixed(2);
+          const price = item.priceAtAdd.toLocaleString('es-CO');
+          const subtotal = (item.priceAtAdd * item.quantity).toLocaleString('es-CO');
 
           message += `*${index + 1}. ${item.product.name}*${variantText}\n`;
           message += `   📦 Cantidad: ${item.quantity}\n`;
@@ -179,8 +179,8 @@ export const useCartStore = create<CartStore>()(
           message += `   💰 Subtotal: $${subtotal}\n\n`;
         });
 
-        const total = (state.total / 100).toFixed(2);
-        const discount = (state.totalDiscount / 100).toFixed(2);
+        const total = state.total.toLocaleString('es-CO');
+        const discount = state.totalDiscount.toLocaleString('es-CO');
 
         if (state.totalDiscount > 0) {
           message += `🎉 *Ahorro total: $${discount}*\n`;

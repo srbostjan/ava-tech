@@ -55,7 +55,7 @@ export default function VariantSelector({
           <div className="flex flex-wrap gap-2">
             {typeVariants.map((variant) => {
               const isSelected = variant.id === selectedVariantId;
-              const isOutOfStock = variant.stockAvailable === 0;
+              const isOutOfStock = variant.stockCount === 0;
 
               return (
                 <button
@@ -73,9 +73,9 @@ export default function VariantSelector({
                   `}
                 >
                   {variant.name}
-                  {variant.stockAvailable !== undefined && !isOutOfStock && (
+                  {variant.stockCount !== undefined && !isOutOfStock && (
                     <span className="text-xs ml-1 text-neutral-500">
-                      ({variant.stockAvailable} disponibles)
+                      ({variant.stockCount} disponibles)
                     </span>
                   )}
                 </button>

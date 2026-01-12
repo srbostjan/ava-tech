@@ -28,7 +28,7 @@ export interface ProductVariant {
   id: string;
   name: string; // e.g., "Rojo", "XL", "Acero inoxidable"
   type: VariantType;
-  stockAvailable?: number; // Future: will come from DynamoDB
+  stockCount?: number; // Available stock (will come from DynamoDB)
   images?: ProductImage[]; // Each variant can have its own images
 }
 
@@ -64,15 +64,17 @@ export interface Product {
   description: string;
   categoryId: string;
   specs: ProductSpec[];
-  priceOriginal: number; // Original price in currency units (e.g., USD cents)
-  priceDiscount: number; // Discounted price
+  priceOriginal: number; // Price in COP (Colombian Pesos), e.g., 1299990 = $1,299,990
+  priceDiscount: number; // Discounted price in COP
   images: ProductImage[];
   variants: ProductVariant[];
-  featured?: boolean; // For showing on home page
+  featured?: boolean; // For showing on home page (Note: stored as "true"/"false" string in DynamoDB for GSI)
   rating?: ProductRating; // Product rating summary
   stockCount?: number; // Available stock (for urgency signals)
   viewsToday?: number; // Views today (for social proof)
   soldCount?: number; // Total units sold
+  ratingAverage?: number; // Average rating (0-5)
+  ratingCount?: number; // Total number of ratings
   createdAt?: string; // ISO date string - will be managed by DynamoDB
   updatedAt?: string; // ISO date string - will be managed by DynamoDB
 }
@@ -84,6 +86,8 @@ export interface Category {
   description?: string;
   imageUrl?: string;
   parentCategoryId?: string; // For nested categories in the future
+  order?: number; // Display order in UI
+  isActive?: boolean; // Whether category is visible
 }
 
 // Cart Item (what user adds to cart)

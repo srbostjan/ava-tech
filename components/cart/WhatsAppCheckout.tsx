@@ -76,12 +76,12 @@ export function WhatsAppCheckout() {
             {items
               .map((item, index) => {
                 const variantText = item.variant ? ` - ${item.variant.name}` : '';
-                const price = (item.priceAtAdd / 100).toFixed(2);
-                const subtotal = ((item.priceAtAdd * item.quantity) / 100).toFixed(2);
+                const price = item.priceAtAdd.toLocaleString('es-CO');
+                const subtotal = (item.priceAtAdd * item.quantity).toLocaleString('es-CO');
                 return `${index + 1}. ${item.product.name}${variantText}\n   📦 Cantidad: ${item.quantity}\n   💵 Precio: $${price}\n   💰 Subtotal: $${subtotal}\n\n`;
               })
               .join('')}
-            💰 TOTAL: ${(total / 100).toFixed(2)}
+            💰 TOTAL: ${total.toLocaleString('es-CO')}
             {'\n\n'}
             ¿Podrían darme más información y ayudarme con la compra?
           </pre>

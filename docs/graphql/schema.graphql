@@ -20,92 +20,93 @@
 # PRODUCT CATALOG (Public Read-Only)
 # ------------------------------------------
 
-type Product @model
-  @auth(rules: [
-    { allow: public, operations: [read] },
-    { allow: private, provider: iam }  # CMS can create/update
-  ])
-{
+type Product
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: private, provider: iam } # CMS can create/update
+    ]
+  ) {
   id: ID!
   sku: String @index(name: "productBySKU")
   name: String!
   description: String!
 
   # Category relationship
-  categoryId: ID! @index(
-    name: "productsByCategory",
-    sortKeyFields: ["priceDiscount"]  # Sort by price within category
-  )
+  categoryId: ID!
+    @index(
+      name: "productsByCategory"
+      sortKeyFields: ["priceDiscount"] # Sort by price within category
+    )
   category: Category @belongsTo(fields: ["categoryId"])
 
   # Product details
-  specs: AWSJSON  # Flexible JSON for specs like { "RAM": "16GB", "Processor": "i7" }
-  priceOriginal: Int!  # Price in cents (e.g., 12999 = $129.99)
-  priceDiscount: Int!  # Discounted price in cents
-  images: AWSJSON      # Array of images as JSON
-
+  specs: AWSJSON # Flexible JSON for specs like { "RAM": "16GB", "Processor": "i7" }
+  priceOriginal: Int! # Price in cents (e.g., 12999 = $129.99)
+  priceDiscount: Int! # Discounted price in cents
+  images: AWSJSON # Array of images as JSON
   # Variants (colors, sizes, etc.)
   variants: [ProductVariant] @hasMany(indexName: "variantsByProduct", fields: ["id"])
 
-  # Featured products (for homepage)
-  featured: Boolean @index(
-    name: "productsByFeatured",
-    sortKeyFields: ["createdAt"]  # Featured products sorted by date
-  )
+  # Featured products (for homepage) - stored as "true"/"false" string for GSI partition key
+  featured: String
+    @index(
+      name: "productsByFeatured"
+      sortKeyFields: ["createdAt"] # Featured products sorted by date
+    )
 
   # Stock (informative only, updated from CMS)
-  stockAvailable: Int
-  isAvailable: Boolean  # true/false to show "Out of Stock"
+  stockCount: Int
+  isAvailable: Boolean # true/false to show "Out of Stock"
+  # Rating & Social Proof
+  ratingAverage: Float
+  ratingCount: Int
+  viewsToday: Int
+  soldCount: Int
 
   # SEO & Analytics
-  slug: String @index(name: "productBySlug")  # URL-friendly name
-  views: Int           # Incremented when product is viewed
-  inquiries: Int       # How many times added to WhatsApp inquiries
-
+  slug: String @index(name: "productBySlug") # URL-friendly name
+  views: Int # Incremented when product is viewed
+  inquiries: Int # How many times added to WhatsApp inquiries
   # Timestamps
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
 
-type ProductVariant @model
-  @auth(rules: [
-    { allow: public, operations: [read] },
-    { allow: private, provider: iam }
-  ])
-{
+type ProductVariant
+  @model
+  @auth(rules: [{ allow: public, operations: [read] }, { allow: private, provider: iam }]) {
   id: ID!
   productId: ID! @index(name: "variantsByProduct")
   product: Product @belongsTo(fields: ["productId"])
-  name: String!        # e.g., "Titanio Natural - 256GB", "Rojo", "XL"
+  name: String! # e.g., "Titanio Natural - 256GB", "Rojo", "XL"
   type: VariantType!
-  stockAvailable: Int
+  stockCount: Int
   isAvailable: Boolean
-  images: AWSJSON      # Variant-specific images
+  images: AWSJSON # Variant-specific images
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
 
 enum VariantType {
-  COLOR
-  SIZE
-  MATERIAL
-  STYLE
+  color
+  size
+  material
+  style
 }
 
-type Category @model
-  @auth(rules: [
-    { allow: public, operations: [read] },
-    { allow: private, provider: iam }
-  ])
-{
+type Category
+  @model
+  @auth(rules: [{ allow: public, operations: [read] }, { allow: private, provider: iam }]) {
   id: ID!
   slug: String @index(name: "categoryBySlug")
   name: String!
   description: String
-  imageUrl: String  # S3 URL or external image
-  parentCategoryId: ID  # For nested categories
+  imageUrl: String # S3 URL or external image
+  parentCategoryId: ID # For nested categories
   products: [Product] @hasMany(indexName: "productsByCategory", fields: ["id"])
-  order: Int        # Display order in UI
+  order: Int # Display order in UI
   isActive: Boolean
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
@@ -115,25 +116,26 @@ type Category @model
 # WHATSAPP ANALYTICS (Optional but Recommended)
 # ------------------------------------------
 
-type WhatsAppInquiry @model
-  @auth(rules: [
-    { allow: public, operations: [create] },  # Anyone can create
-    { allow: private, provider: iam }          # Only CMS can read/update
-  ])
-{
+type WhatsAppInquiry
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create] } # Anyone can create
+      { allow: private, provider: iam } # Only CMS can read/update
+    ]
+  ) {
   id: ID!
 
   # Anonymous identification
   sessionId: String! @index(name: "inquiriesBySession")
-  fingerprint: String  # Browser fingerprint (optional)
-
+  fingerprint: String # Browser fingerprint (optional)
   # Optional customer data (captured before WhatsApp redirect)
   customerName: String
   customerEmail: String @index(name: "inquiriesByEmail")
   customerPhone: String
 
   # Inquiry details
-  items: AWSJSON!      # [{ productId, variantId, quantity, priceAtInquiry, productName }]
+  items: AWSJSON! # [{ productId, variantId, quantity, priceAtInquiry, productName }]
   totalAmount: Int!
   totalItems: Int!
 
@@ -149,13 +151,9 @@ type WhatsAppInquiry @model
   status: InquiryStatus
   convertedToSale: Boolean
   saleAmount: Int
-  notes: String        # Seller notes
-
+  notes: String # Seller notes
   # Timestamps
-  createdAt: AWSDateTime @index(
-    name: "inquiriesByDate",
-    sortKeyFields: ["totalAmount"]
-  )
+  createdAt: AWSDateTime @index(name: "inquiriesByDate", sortKeyFields: ["totalAmount"])
   updatedAt: AWSDateTime
 }
 
@@ -168,12 +166,12 @@ enum InquirySource {
 }
 
 enum InquiryStatus {
-  PENDING      # Just created
-  CONTACTED    # Customer contacted via WhatsApp
-  NEGOTIATING  # In negotiation
-  CONVERTED    # Sale completed
-  LOST         # Did not convert
-  SPAM         # Invalid inquiry
+  PENDING # Just created
+  CONTACTED # Customer contacted via WhatsApp
+  NEGOTIATING # In negotiation
+  CONVERTED # Sale completed
+  LOST # Did not convert
+  SPAM # Invalid inquiry
 }
 
 # ------------------------------------------
@@ -214,18 +212,15 @@ type Query {
     sort: ProductSort = RELEVANCE
     limit: Int = 20
     nextToken: String
-  ): ProductConnection
-    @function(name: "searchProducts-${env}")
+  ): ProductConnection @function(name: "searchProducts-${env}")
 
   # Featured products (homepage)
-  listFeaturedProducts(
-    limit: Int = 10
-  ): [Product]
+  listFeaturedProducts(limit: Int = 10): [Product]
 
   # Products by category
   listProductsByCategory(
     categoryId: ID
-    slug: String  # Alternative to ID
+    slug: String # Alternative to ID
     sort: ProductSort = PRICE_ASC
     limit: Int = 20
     nextToken: String
@@ -235,17 +230,11 @@ type Query {
   getProduct(id: ID, slug: String): Product
 
   # Related products (based on category)
-  getRelatedProducts(
-    productId: ID!
-    limit: Int = 6
-  ): [Product]
+  getRelatedProducts(productId: ID!, limit: Int = 6): [Product]
     @function(name: "getRelatedProducts-${env}")
 
   # Analytics (CMS only)
-  getInquiryStats(
-    startDate: AWSDateTime!
-    endDate: AWSDateTime!
-  ): InquiryStats
+  getInquiryStats(startDate: AWSDateTime!, endDate: AWSDateTime!): InquiryStats
     @function(name: "getInquiryStats-${env}")
     @auth(rules: [{ allow: private, provider: iam }])
 }
@@ -291,23 +280,14 @@ enum ProductSort {
 
 type Mutation {
   # Create WhatsApp inquiry (analytics tracking)
-  createWhatsAppInquiry(
-    input: CreateWhatsAppInquiryInput!
-  ): WhatsAppInquiry
+  createWhatsAppInquiry(input: CreateWhatsAppInquiryInput!): WhatsAppInquiry
     @function(name: "createWhatsAppInquiry-${env}")
 
   # Increment product views (analytics)
-  incrementProductViews(
-    productId: ID!
-  ): Product
-    @function(name: "incrementProductViews-${env}")
+  incrementProductViews(productId: ID!): Product @function(name: "incrementProductViews-${env}")
 
   # CMS: Update product stock
-  updateProductStock(
-    productId: ID!
-    stockAvailable: Int!
-    isAvailable: Boolean!
-  ): Product
+  updateProductStock(productId: ID!, stockCount: Int!, isAvailable: Boolean!): Product
     @auth(rules: [{ allow: private, provider: iam }])
 
   # CMS: Update inquiry status
@@ -317,8 +297,7 @@ type Mutation {
     convertedToSale: Boolean
     saleAmount: Int
     notes: String
-  ): WhatsAppInquiry
-    @auth(rules: [{ allow: private, provider: iam }])
+  ): WhatsAppInquiry @auth(rules: [{ allow: private, provider: iam }])
 }
 
 # ------------------------------------------

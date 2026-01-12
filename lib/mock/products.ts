@@ -76,15 +76,15 @@ export const mockProducts: Product[] = [
         id: 'cel-001-titanio-256',
         name: 'Titanio Natural - 256GB',
         type: 'color',
-        stockAvailable: 15,
+        stockCount: 15,
       },
       {
         id: 'cel-001-titanio-512',
         name: 'Titanio Natural - 512GB',
         type: 'color',
-        stockAvailable: 10,
+        stockCount: 10,
       },
-      { id: 'cel-001-azul-256', name: 'Titanio Azul - 256GB', type: 'color', stockAvailable: 12 },
+      { id: 'cel-001-azul-256', name: 'Titanio Azul - 256GB', type: 'color', stockCount: 12 },
     ],
   },
   {
@@ -117,12 +117,12 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-002-black-256', name: 'Phantom Black - 256GB', type: 'color', stockAvailable: 20 },
+      { id: 'cel-002-black-256', name: 'Phantom Black - 256GB', type: 'color', stockCount: 20 },
       {
         id: 'cel-002-violet-512',
         name: 'Titanium Violet - 512GB',
         type: 'color',
-        stockAvailable: 8,
+        stockCount: 8,
       },
     ],
   },
@@ -156,8 +156,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-003-black', name: 'Negro Titanio', type: 'color', stockAvailable: 15 },
-      { id: 'cel-003-white', name: 'Blanco Ceramic', type: 'color', stockAvailable: 10 },
+      { id: 'cel-003-black', name: 'Negro Titanio', type: 'color', stockCount: 15 },
+      { id: 'cel-003-white', name: 'Blanco Ceramic', type: 'color', stockCount: 10 },
     ],
   },
   {
@@ -186,8 +186,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-004-obsidian', name: 'Obsidian - 256GB', type: 'color', stockAvailable: 12 },
-      { id: 'cel-004-bay', name: 'Bay Blue - 256GB', type: 'color', stockAvailable: 8 },
+      { id: 'cel-004-obsidian', name: 'Obsidian - 256GB', type: 'color', stockCount: 12 },
+      { id: 'cel-004-bay', name: 'Bay Blue - 256GB', type: 'color', stockCount: 8 },
     ],
   },
   {
@@ -216,8 +216,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-005-green', name: 'Flowy Emerald', type: 'color', stockAvailable: 10 },
-      { id: 'cel-005-black', name: 'Silky Black', type: 'color', stockAvailable: 14 },
+      { id: 'cel-005-green', name: 'Flowy Emerald', type: 'color', stockCount: 10 },
+      { id: 'cel-005-black', name: 'Silky Black', type: 'color', stockCount: 14 },
     ],
   },
   {
@@ -246,9 +246,9 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-006-blue', name: 'Azul - 128GB', type: 'color', stockAvailable: 18 },
-      { id: 'cel-006-purple', name: 'Púrpura - 128GB', type: 'color', stockAvailable: 15 },
-      { id: 'cel-006-midnight', name: 'Medianoche - 256GB', type: 'color', stockAvailable: 12 },
+      { id: 'cel-006-blue', name: 'Azul - 128GB', type: 'color', stockCount: 18 },
+      { id: 'cel-006-purple', name: 'Púrpura - 128GB', type: 'color', stockCount: 15 },
+      { id: 'cel-006-midnight', name: 'Medianoche - 256GB', type: 'color', stockCount: 12 },
     ],
   },
   {
@@ -276,8 +276,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-007-phantom', name: 'Phantom Black - 512GB', type: 'color', stockAvailable: 5 },
-      { id: 'cel-007-cream', name: 'Cream - 512GB', type: 'color', stockAvailable: 3 },
+      { id: 'cel-007-phantom', name: 'Phantom Black - 512GB', type: 'color', stockCount: 5 },
+      { id: 'cel-007-cream', name: 'Cream - 512GB', type: 'color', stockCount: 3 },
     ],
   },
   {
@@ -306,8 +306,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-008-interstellar', name: 'Interstellar Black', type: 'color', stockAvailable: 9 },
-      { id: 'cel-008-lunar', name: 'Lunar Blue', type: 'color', stockAvailable: 7 },
+      { id: 'cel-008-interstellar', name: 'Interstellar Black', type: 'color', stockCount: 9 },
+      { id: 'cel-008-lunar', name: 'Lunar Blue', type: 'color', stockCount: 7 },
     ],
   },
   {
@@ -336,8 +336,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-009-gold', name: 'Desert Gold', type: 'color', stockAvailable: 6 },
-      { id: 'cel-009-black', name: 'Space Black', type: 'color', stockAvailable: 8 },
+      { id: 'cel-009-gold', name: 'Desert Gold', type: 'color', stockCount: 6 },
+      { id: 'cel-009-black', name: 'Space Black', type: 'color', stockCount: 8 },
     ],
   },
   {
@@ -366,8 +366,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'cel-010-red', name: 'Mars Red', type: 'color', stockAvailable: 14 },
-      { id: 'cel-010-silver', name: 'Moon Silver', type: 'color', stockAvailable: 11 },
+      { id: 'cel-010-red', name: 'Mars Red', type: 'color', stockCount: 14 },
+      { id: 'cel-010-silver', name: 'Moon Silver', type: 'color', stockCount: 11 },
     ],
   },
 
@@ -400,8 +400,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'comp-001-gray-1tb', name: 'Gris Espacial - 1TB', type: 'color', stockAvailable: 8 },
-      { id: 'comp-001-silver-2tb', name: 'Plata - 2TB', type: 'color', stockAvailable: 5 },
+      { id: 'comp-001-gray-1tb', name: 'Gris Espacial - 1TB', type: 'color', stockCount: 8 },
+      { id: 'comp-001-silver-2tb', name: 'Plata - 2TB', type: 'color', stockCount: 5 },
     ],
   },
   {
@@ -430,8 +430,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'comp-002-platinum', name: 'Platinum Silver', type: 'color', stockAvailable: 10 },
-      { id: 'comp-002-graphite', name: 'Graphite', type: 'color', stockAvailable: 7 },
+      { id: 'comp-002-platinum', name: 'Platinum Silver', type: 'color', stockCount: 10 },
+      { id: 'comp-002-graphite', name: 'Graphite', type: 'color', stockCount: 7 },
     ],
   },
   {
@@ -460,8 +460,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'comp-003-silver', name: 'Natural Silver', type: 'color', stockAvailable: 15 },
-      { id: 'comp-003-blue', name: 'Spruce Blue', type: 'color', stockAvailable: 12 },
+      { id: 'comp-003-silver', name: 'Natural Silver', type: 'color', stockCount: 15 },
+      { id: 'comp-003-blue', name: 'Spruce Blue', type: 'color', stockCount: 12 },
     ],
   },
   {
@@ -489,7 +489,7 @@ export const mockProducts: Product[] = [
         alt: 'Lenovo ThinkPad X1 Carbon',
       },
     ],
-    variants: [{ id: 'comp-004-black', name: 'Deep Black', type: 'color', stockAvailable: 9 }],
+    variants: [{ id: 'comp-004-black', name: 'Deep Black', type: 'color', stockCount: 9 }],
   },
   {
     id: 'comp-005',
@@ -517,8 +517,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'comp-005-eclipse', name: 'Eclipse Gray', type: 'color', stockAvailable: 6 },
-      { id: 'comp-005-volt', name: 'Volt Green', type: 'color', stockAvailable: 4 },
+      { id: 'comp-005-eclipse', name: 'Eclipse Gray', type: 'color', stockCount: 6 },
+      { id: 'comp-005-volt', name: 'Volt Green', type: 'color', stockCount: 4 },
     ],
   },
   {
@@ -547,8 +547,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'comp-006-platinum', name: 'Platinum', type: 'color', stockAvailable: 11 },
-      { id: 'comp-006-sage', name: 'Sage', type: 'color', stockAvailable: 8 },
+      { id: 'comp-006-platinum', name: 'Platinum', type: 'color', stockCount: 11 },
+      { id: 'comp-006-sage', name: 'Sage', type: 'color', stockCount: 8 },
     ],
   },
   {
@@ -576,7 +576,7 @@ export const mockProducts: Product[] = [
         alt: 'Acer Predator Helios 18',
       },
     ],
-    variants: [{ id: 'comp-007-black', name: 'Abyssal Black', type: 'color', stockAvailable: 3 }],
+    variants: [{ id: 'comp-007-black', name: 'Abyssal Black', type: 'color', stockCount: 3 }],
   },
   {
     id: 'comp-008',
@@ -604,8 +604,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'comp-008-gray', name: 'Space Gray', type: 'color', stockAvailable: 7 },
-      { id: 'comp-008-green', name: 'Emerald Green', type: 'color', stockAvailable: 5 },
+      { id: 'comp-008-gray', name: 'Space Gray', type: 'color', stockCount: 7 },
+      { id: 'comp-008-green', name: 'Emerald Green', type: 'color', stockCount: 5 },
     ],
   },
   {
@@ -633,7 +633,7 @@ export const mockProducts: Product[] = [
         alt: 'MSI Creator Z16P',
       },
     ],
-    variants: [{ id: 'comp-009-lunar', name: 'Lunar Gray', type: 'color', stockAvailable: 5 }],
+    variants: [{ id: 'comp-009-lunar', name: 'Lunar Gray', type: 'color', stockCount: 5 }],
   },
   {
     id: 'comp-010',
@@ -661,8 +661,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'comp-010-silver', name: 'Snow White', type: 'color', stockAvailable: 8 },
-      { id: 'comp-010-black', name: 'Obsidian Black', type: 'color', stockAvailable: 6 },
+      { id: 'comp-010-silver', name: 'Snow White', type: 'color', stockCount: 8 },
+      { id: 'comp-010-black', name: 'Obsidian Black', type: 'color', stockCount: 6 },
     ],
   },
 
@@ -693,7 +693,7 @@ export const mockProducts: Product[] = [
         alt: 'AirPods Pro 2',
       },
     ],
-    variants: [{ id: 'acc-001-white', name: 'Blanco', type: 'color', stockAvailable: 25 }],
+    variants: [{ id: 'acc-001-white', name: 'Blanco', type: 'color', stockCount: 25 }],
   },
   {
     id: 'acc-002',
@@ -720,8 +720,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'acc-002-black', name: 'Negro', type: 'color', stockAvailable: 18 },
-      { id: 'acc-002-silver', name: 'Plata', type: 'color', stockAvailable: 14 },
+      { id: 'acc-002-black', name: 'Negro', type: 'color', stockCount: 18 },
+      { id: 'acc-002-silver', name: 'Plata', type: 'color', stockCount: 14 },
     ],
   },
   {
@@ -749,8 +749,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'acc-003-graphite', name: 'Graphite', type: 'color', stockAvailable: 20 },
-      { id: 'acc-003-pale', name: 'Pale Gray', type: 'color', stockAvailable: 15 },
+      { id: 'acc-003-graphite', name: 'Graphite', type: 'color', stockCount: 20 },
+      { id: 'acc-003-pale', name: 'Pale Gray', type: 'color', stockCount: 15 },
     ],
   },
   {
@@ -778,9 +778,9 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'acc-004-red', name: 'Gateron Red (Lineal)', type: 'style', stockAvailable: 12 },
-      { id: 'acc-004-brown', name: 'Gateron Brown (Táctil)', type: 'style', stockAvailable: 15 },
-      { id: 'acc-004-blue', name: 'Gateron Blue (Clicky)', type: 'style', stockAvailable: 8 },
+      { id: 'acc-004-red', name: 'Gateron Red (Lineal)', type: 'style', stockCount: 12 },
+      { id: 'acc-004-brown', name: 'Gateron Brown (Táctil)', type: 'style', stockCount: 15 },
+      { id: 'acc-004-blue', name: 'Gateron Blue (Clicky)', type: 'style', stockCount: 8 },
     ],
   },
   {
@@ -807,7 +807,7 @@ export const mockProducts: Product[] = [
         alt: 'Anker 747 GaNPrime',
       },
     ],
-    variants: [{ id: 'acc-005-black', name: 'Negro', type: 'color', stockAvailable: 22 }],
+    variants: [{ id: 'acc-005-black', name: 'Negro', type: 'color', stockCount: 22 }],
   },
   {
     id: 'acc-006',
@@ -834,8 +834,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'acc-006-black', name: 'Negro - 2TB', type: 'color', stockAvailable: 16 },
-      { id: 'acc-006-blue', name: 'Azul - 2TB', type: 'color', stockAvailable: 10 },
+      { id: 'acc-006-black', name: 'Negro - 2TB', type: 'color', stockCount: 16 },
+      { id: 'acc-006-blue', name: 'Azul - 2TB', type: 'color', stockCount: 10 },
     ],
   },
   {
@@ -863,8 +863,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'acc-007-black', name: 'Negro', type: 'color', stockAvailable: 14 },
-      { id: 'acc-007-white', name: 'Blanco', type: 'color', stockAvailable: 9 },
+      { id: 'acc-007-black', name: 'Negro', type: 'color', stockCount: 14 },
+      { id: 'acc-007-white', name: 'Blanco', type: 'color', stockCount: 9 },
     ],
   },
   {
@@ -891,7 +891,7 @@ export const mockProducts: Product[] = [
         alt: 'Elgato Stream Deck',
       },
     ],
-    variants: [{ id: 'acc-008-black', name: 'Negro', type: 'color', stockAvailable: 11 }],
+    variants: [{ id: 'acc-008-black', name: 'Negro', type: 'color', stockCount: 11 }],
   },
   {
     id: 'acc-009',
@@ -918,8 +918,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'acc-009-white', name: 'Blanco', type: 'color', stockAvailable: 13 },
-      { id: 'acc-009-black', name: 'Negro', type: 'color', stockAvailable: 10 },
+      { id: 'acc-009-white', name: 'Blanco', type: 'color', stockCount: 13 },
+      { id: 'acc-009-black', name: 'Negro', type: 'color', stockCount: 10 },
     ],
   },
   {
@@ -947,7 +947,7 @@ export const mockProducts: Product[] = [
         alt: 'Logitech Brio 4K',
       },
     ],
-    variants: [{ id: 'acc-010-black', name: 'Negro', type: 'color', stockAvailable: 17 }],
+    variants: [{ id: 'acc-010-black', name: 'Negro', type: 'color', stockCount: 17 }],
   },
 
   // ========================================
@@ -979,8 +979,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'elec-001-stainless', name: 'Acero Inoxidable', type: 'material', stockAvailable: 6 },
-      { id: 'elec-001-black', name: 'Black Stainless Steel', type: 'material', stockAvailable: 4 },
+      { id: 'elec-001-stainless', name: 'Acero Inoxidable', type: 'material', stockCount: 6 },
+      { id: 'elec-001-black', name: 'Black Stainless Steel', type: 'material', stockCount: 4 },
     ],
   },
   {
@@ -1009,8 +1009,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'elec-002-graphite', name: 'Graphite Steel', type: 'color', stockAvailable: 5 },
-      { id: 'elec-002-white', name: 'Blanco', type: 'color', stockAvailable: 7 },
+      { id: 'elec-002-graphite', name: 'Graphite Steel', type: 'color', stockCount: 5 },
+      { id: 'elec-002-white', name: 'Blanco', type: 'color', stockCount: 7 },
     ],
   },
   {
@@ -1037,9 +1037,7 @@ export const mockProducts: Product[] = [
         alt: 'Dyson V15 Detect',
       },
     ],
-    variants: [
-      { id: 'elec-003-yellow', name: 'Amarillo/Nickel', type: 'color', stockAvailable: 12 },
-    ],
+    variants: [{ id: 'elec-003-yellow', name: 'Amarillo/Nickel', type: 'color', stockCount: 12 }],
   },
   {
     id: 'elec-004',
@@ -1065,7 +1063,7 @@ export const mockProducts: Product[] = [
         alt: 'Ninja Foodi SmartLid',
       },
     ],
-    variants: [{ id: 'elec-004-black', name: 'Negro', type: 'color', stockAvailable: 15 }],
+    variants: [{ id: 'elec-004-black', name: 'Negro', type: 'color', stockCount: 15 }],
   },
   {
     id: 'elec-005',
@@ -1093,8 +1091,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'elec-005-stainless', name: 'Acero Inoxidable', type: 'material', stockAvailable: 8 },
-      { id: 'elec-005-black', name: 'Black Truffle', type: 'material', stockAvailable: 6 },
+      { id: 'elec-005-stainless', name: 'Acero Inoxidable', type: 'material', stockCount: 8 },
+      { id: 'elec-005-black', name: 'Black Truffle', type: 'material', stockCount: 6 },
     ],
   },
   {
@@ -1123,8 +1121,8 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'elec-006-stainless', name: 'Acero Inoxidable', type: 'material', stockAvailable: 10 },
-      { id: 'elec-006-black', name: 'Negro', type: 'material', stockAvailable: 7 },
+      { id: 'elec-006-stainless', name: 'Acero Inoxidable', type: 'material', stockCount: 10 },
+      { id: 'elec-006-black', name: 'Negro', type: 'material', stockCount: 7 },
     ],
   },
   {
@@ -1152,7 +1150,7 @@ export const mockProducts: Product[] = [
         alt: 'Daikin Mini-Split',
       },
     ],
-    variants: [{ id: 'elec-007-white', name: 'Blanco', type: 'color', stockAvailable: 9 }],
+    variants: [{ id: 'elec-007-white', name: 'Blanco', type: 'color', stockCount: 9 }],
   },
   {
     id: 'elec-008',
@@ -1179,7 +1177,7 @@ export const mockProducts: Product[] = [
         alt: 'iRobot Roomba j7+',
       },
     ],
-    variants: [{ id: 'elec-008-graphite', name: 'Graphite', type: 'color', stockAvailable: 11 }],
+    variants: [{ id: 'elec-008-graphite', name: 'Graphite', type: 'color', stockCount: 11 }],
   },
   {
     id: 'elec-009',
@@ -1207,9 +1205,9 @@ export const mockProducts: Product[] = [
       },
     ],
     variants: [
-      { id: 'elec-009-black', name: 'Negro', type: 'color', stockAvailable: 10 },
-      { id: 'elec-009-red', name: 'Rojo', type: 'color', stockAvailable: 6 },
-      { id: 'elec-009-white', name: 'Blanco', type: 'color', stockAvailable: 8 },
+      { id: 'elec-009-black', name: 'Negro', type: 'color', stockCount: 10 },
+      { id: 'elec-009-red', name: 'Rojo', type: 'color', stockCount: 6 },
+      { id: 'elec-009-white', name: 'Blanco', type: 'color', stockCount: 8 },
     ],
   },
   {
@@ -1236,9 +1234,7 @@ export const mockProducts: Product[] = [
         alt: 'Philips Hue Starter Kit',
       },
     ],
-    variants: [
-      { id: 'elec-010-kit', name: 'Kit 4 Focos + Bridge', type: 'style', stockAvailable: 18 },
-    ],
+    variants: [{ id: 'elec-010-kit', name: 'Kit 4 Focos + Bridge', type: 'style', stockCount: 18 }],
   },
 ];
 

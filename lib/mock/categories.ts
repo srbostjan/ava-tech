@@ -14,24 +14,32 @@ export const mockCategories: Category[] = [
     name: 'Celulares',
     description: 'Smartphones y teléfonos móviles de última generación',
     imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500',
+    order: 1,
+    isActive: true,
   },
   {
     id: 'computadores',
     name: 'Computadores',
     description: 'Laptops, PCs de escritorio y equipos portátiles',
     imageUrl: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500',
+    order: 2,
+    isActive: true,
   },
   {
     id: 'accesorios',
     name: 'Accesorios',
     description: 'Audífonos, cargadores, mouse, teclados y más',
     imageUrl: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500',
+    order: 3,
+    isActive: true,
   },
   {
     id: 'electrodomesticos',
     name: 'Electrodomésticos',
     description: 'Neveras, lavadoras, aires acondicionados y más',
     imageUrl: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500',
+    order: 4,
+    isActive: true,
   },
 ];
 

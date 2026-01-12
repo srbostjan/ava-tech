@@ -1,8 +1,12 @@
 import type { Metadata } from 'next';
+import { Amplify } from 'aws-amplify';
 import './globals.css';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
+import outputs from '../amplify_outputs.json';
+
+Amplify.configure(outputs);
 
 export const metadata: Metadata = {
   title: 'Ava tecnologia',
